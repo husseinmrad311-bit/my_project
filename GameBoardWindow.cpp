@@ -46,11 +46,14 @@ bool GameBoardWindow::loadAndShowMap(const QString& mapPath, QString& error)
         ui->mapLabel->setText(data.mapName);
 
     renderBoard(data);
+
     QTimer::singleShot(0, this, [this]() {
         fitBoardToView();
     });
+
     return true;
 }
+
 
 void GameBoardWindow::renderBoard(const MapData& data)
 {
@@ -59,18 +62,44 @@ void GameBoardWindow::renderBoard(const MapData& data)
     const int rows = data.board.rows;
     const int cols = data.board.cols;
 
-    const int cellSize = 30;   //you can change later
-    const int gap = 2;
+    const int cellSize = 60;   // bigger looks closer to your reference
+    const int gap = 8;
+
+    // Count how many REAL tiles in each row (type != -1)
+    QVector<int> rowTileCounts(rows, 0);
+    int maxTilesInAnyRow = 0;
 
     for (int r = 0; r < rows; ++r) {
+        int cnt = 0;
+        for (int c = 0; c < cols; ++c) {
+            const Cell& cell = data.board.grid[r][c];
+            if (cell.type != -1 && !cell.tileId.isEmpty())
+                cnt++;
+        }
+        rowTileCounts[r] = cnt;
+        maxTilesInAnyRow = qMax(maxTilesInAnyRow, cnt);
+    }
+
+    for (int r = 0; r < rows; ++r) {
+
+        // Center this row relative to the widest row
+        const int tilesThisRow = rowTileCounts[r];
+        const qreal rowOffsetTiles = (maxTilesInAnyRow - tilesThisRow) / 2.0; // can be 0.5
+
+        int tileIndexInRow = 0;
+
         for (int c = 0; c < cols; ++c) {
             const Cell& cell = data.board.grid[r][c];
 
-            QRectF rect(c * (cellSize + gap),
-                        r * (cellSize + gap),
-                        cellSize, cellSize);
+            // spacing segment => don't draw, but also don't increment tileIndexInRow
+            if (cell.type == -1 || cell.tileId.isEmpty())
+                continue;
 
-            //simple coloring by type
+            const qreal x = (rowOffsetTiles + tileIndexInRow) * (cellSize + gap);
+            const qreal y = r * (cellSize + gap);
+
+            QRectF rect(x, y, cellSize, cellSize);
+
             QColor color;
             switch (cell.type) {
             case 0: color = QColor(220, 220, 220); break;
@@ -82,34 +111,32 @@ void GameBoardWindow::renderBoard(const MapData& data)
             auto *item = m_scene->addRect(rect, QPen(Qt::black), QBrush(color));
             item->setToolTip(cell.tileId + " : " + QString::number(cell.type));
 
-            //text inside cell TileID:Number
-            QString cellText =  cell.tileId + ":" + QString::number(cell.type) ;
+            // Text like reference (2 lines)
+            const QString text = cell.tileId + "\n" + QString::number(cell.type);
+            auto *textItem = m_scene->addText(text);
 
-            auto *textItem = m_scene->addText(cellText);
             QFont f = textItem->font();
             f.setBold(true);
-            f.setPointSize(10);              //we can change this
+            f.setPointSize(12);
             textItem->setFont(f);
 
-            //center text inside the rectangle
             QRectF tb = textItem->boundingRect();
             textItem->setPos(
                 rect.center().x() - tb.width() / 2.0,
                 rect.center().y() - tb.height() / 2.0
                 );
 
-            // make text readable on dark colors
+            // make text readable
             textItem->setDefaultTextColor(Qt::black);
-            if (cell.type == 2) {            //blue cell
-                textItem->setDefaultTextColor(Qt::white);
-            }
+            if (cell.type == 2) textItem->setDefaultTextColor(Qt::white);
 
+            tileIndexInRow++;
         }
     }
 
-    //fit all drawn items inside the view
     ui->boardView->fitInView(m_scene->itemsBoundingRect(), Qt::KeepAspectRatio);
 }
+
 
 void GameBoardWindow::fitBoardToView()
 {

@@ -5,7 +5,7 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QResizeEvent>
-#include <QPixmap>  // Include for handling images
+#include <QPixmap>  //include for handling images
 
 MapSelectionWindow::MapSelectionWindow(QWidget *parent)
     : QWidget(parent),
@@ -14,7 +14,7 @@ MapSelectionWindow::MapSelectionWindow(QWidget *parent)
     ui->setupUi(this);
     setWindowTitle("Select Map");
 
-    // Load the background image using QPixmap
+    //load the background image using QPixmap
     m_bgPixmap = QPixmap("D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/images/Map_selection.jpg");  // Add your image path in the resource system
 
     if (m_bgPixmap.isNull()) {
@@ -43,7 +43,7 @@ void MapSelectionWindow::setMapsFolder(const QString &folderPath)
 {
     m_mapsFolder = folderPath;
 
-    // Debug print to check the folder path
+    //debug print to check the folder path
     qDebug() << "Maps folder path: " << m_mapsFolder;
 
     loadMaps();
@@ -62,7 +62,7 @@ void MapSelectionWindow::loadMaps()
         return;
     }
 
-    // loads map1.txt, map2.txt ... and ANY other .txt (dynamic)
+    //loads map1.txt, map2.txt ... and ANY other .txt (dynamic)
     QStringList files = dir.entryList(QStringList() << "*.txt",
                                       QDir::Files, QDir::Name);
 
@@ -77,11 +77,11 @@ void MapSelectionWindow::loadMaps()
 
         MapItem item;
         item.filePath = fullPath;
-        item.displayName = QFileInfo(file).baseName(); // map1, map2, ...
+        item.displayName = QFileInfo(file).baseName(); //map1, map2, ...
 
         m_maps.push_back(item);
 
-        // show in list
+        //show in list
         QListWidgetItem *w = new QListWidgetItem(item.displayName);
         w->setData(Qt::UserRole, item.filePath);
         ui->mapListWidget->addItem(w);
@@ -117,7 +117,7 @@ void MapSelectionWindow::onCancelClicked()
 void MapSelectionWindow::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
-    updateBackground();  // Update background whenever window is resized
+    updateBackground();  //update background whenever window is resized
 }
 
 void MapSelectionWindow::updateBackground()
@@ -126,7 +126,7 @@ void MapSelectionWindow::updateBackground()
         return;
     }
 
-    // If you didn't add backgroundLabel in UI, comment next line
+    //if you didn't add backgroundLabel in UI, comment next line
     ui->backgroundLabel->setPixmap(
         m_bgPixmap.scaled(ui->backgroundLabel->size(),
                           Qt::IgnoreAspectRatio,

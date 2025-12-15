@@ -76,7 +76,7 @@ bool LoginPage::validatePlayerName(const QString &name,
     // 2)first character must be an English letter
     const QChar first = name.at(0);
     if (!first.isLetter() ||
-        !(first.unicode() < 128)) { // ensure ASCII letter if you like
+        !(first.unicode() < 128)) { //ensure ASCII letter if you like
         errorMessage = tr("Name must start with an English letter (A-Z or a-z).");
         return false;
     }
@@ -119,7 +119,7 @@ void LoginPage::onSelectMapButtonClicked()
     const QString p1 = ui->player1LineEdit->text().trimmed();
     const QString p2 = ui->player2LineEdit->text().trimmed();
 
-    // ---- keep your validation exactly as you already have it ----
+    //keep your validation exactly as you already have it
     QStringList errorMessages;
 
     QString err1;
@@ -135,18 +135,18 @@ void LoginPage::onSelectMapButtonClicked()
                              errorMessages.join("\n"));
         return;
     }
-    // ------------------------------------------------------------
 
-    // maps folder (same folder as exe)
+
+    //maps folder (same folder as exe)
     const QString mapsFolder = QDir(QCoreApplication::applicationDirPath()).filePath("maps");
 
-    // Open Map Selection window
+    //open MapSelectionWindow
     auto *mapWin = new MapSelectionWindow();
     mapWin->setAttribute(Qt::WA_DeleteOnClose, true);
     mapWin->setMapsFolder(mapsFolder);
     mapWin->show();
 
-    // If user selects a map -> open GameBoard
+    //if user selects a map then open GameBoard
     QObject::connect(mapWin, &MapSelectionWindow::mapChosen, this,
                      [this, p1, p2](const QString &mapPath)
                      {
@@ -154,7 +154,7 @@ void LoginPage::onSelectMapButtonClicked()
                          auto *game = new GameBoardWindow();
                          game->setAttribute(Qt::WA_DeleteOnClose, true);
 
-                         // Put player names into labels
+                         //put player names into labels
                          game->setPlayerNames(p1, p2);
 
                          // Load + render map
@@ -165,12 +165,12 @@ void LoginPage::onSelectMapButtonClicked()
                          }
 
                          game->show();
-                         this->hide(); // optional: hide login after launching the gameboard
+                         this->hide(); //hide login after launching the gameboard
                      });
 
-    // If canceled -> do nothing
+    //if canceled then do nothing
     QObject::connect(mapWin, &MapSelectionWindow::canceled, this, []() {
-        // user canceled
+        //user canceled
     });
 }
 

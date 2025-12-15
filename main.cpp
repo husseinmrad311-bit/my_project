@@ -1,4 +1,3 @@
-// ===== FILE: main.cpp =====
 #include <QApplication>
 #include <QObject>
 
@@ -12,7 +11,7 @@ int main(int argc, char *argv[])
     SplashScreen splash;
     LoginPage login;
 
-    // Splash -> Login
+    //Splash then Login
     QObject::connect(&splash, &SplashScreen::playClicked, [&]() {
         splash.hide();
         login.show();

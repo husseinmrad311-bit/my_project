@@ -1,0 +1,19 @@
+# ninja log v6
+46	253	7871757656206716	undaunted-phase1_autogen/timestamp	83362bfbad542236
+46	253	7871757656206716	undaunted-phase1_autogen/mocs_compilation.cpp	83362bfbad542236
+256	1696	7871757658299370	CMakeFiles/undaunted-phase1.dir/SplashScreen.cpp.obj	8dc4e7f64150aff
+46	253	7871757656206716	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/undaunted-phase1_autogen/timestamp	83362bfbad542236
+46	253	7871757656206716	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/undaunted-phase1_autogen/mocs_compilation.cpp	83362bfbad542236
+598	2179	7871751452300065	CMakeFiles/undaunted-phase1.dir/undaunted-phase1_autogen/mocs_compilation.cpp.obj	1bfcfa7013d421b
+600	2217	7871751452320552	CMakeFiles/undaunted-phase1.dir/main.cpp.obj	2927454c17991188
+253	1672	7871757658278539	CMakeFiles/undaunted-phase1.dir/mainwindow.cpp.obj	399bbfddcbc96c9f
+1870	2057	7871757674443670	undaunted-phase1.exe	46dd538503a4a4a
+258	1870	7871757658328530	CMakeFiles/undaunted-phase1.dir/LoginPage.cpp.obj	f20142c6527c5a15
+37	232	7872329214983664	undaunted-phase1_autogen/timestamp	83362bfbad542236
+37	232	7872329214983664	undaunted-phase1_autogen/mocs_compilation.cpp	83362bfbad542236
+37	232	7872329214983664	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/undaunted-phase1_autogen/timestamp	83362bfbad542236
+37	232	7872329214983664	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/undaunted-phase1_autogen/mocs_compilation.cpp	83362bfbad542236
+233	1806	7872329215921813	CMakeFiles/undaunted-phase1.dir/undaunted-phase1_autogen/mocs_compilation.cpp.obj	1bfcfa7013d421b
+236	1814	7872329215941832	CMakeFiles/undaunted-phase1.dir/SplashScreen.cpp.obj	8dc4e7f64150aff
+238	1836	7872329215971807	CMakeFiles/undaunted-phase1.dir/LoginPage.cpp.obj	f20142c6527c5a15
+1836	2034	7872329231946492	undaunted-phase1.exe	b2c71fdb5e6342ed

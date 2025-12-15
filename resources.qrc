@@ -1,0 +1,7 @@
+<RCC>
+ <qresource prefix="/">
+  <file>images/splash.jpg</file>
+  <file>images/login_background.jpg</file>
+<file>images/Map_selection.jpg</file>
+ </qresource>
+</RCC>

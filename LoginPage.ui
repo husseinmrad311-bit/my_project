@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LoginPage</class>
+ <widget class="QWidget" name="LoginPage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="backgroundLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap>images/login_background.jpg</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="instructionsLabel">
+     <property name="font">
+      <font>
+       <pointsize>7</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 127);
+color: rgb(255, 237, 164);
+color: rgb(253, 255, 221);</string>
+     </property>
+     <property name="text">
+      <string>Minimum 8 characters
+Start with letter (A-Z/a-z)
+Must include: 1 number + 1 special char + both upper &amp; lowercase</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="player1LineEdit">
+     <property name="font">
+      <font>
+       <family>Segoe UI</family>
+       <pointsize>9</pointsize>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(0, 85, 0);
+font: 9pt &quot;Segoe UI&quot;;
+
+color: rgb(83, 83, 83);
+background-color: rgb(254, 255, 212);</string>
+     </property>
+     <property name="text">
+      <string>PLAYEr@1</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="player2LineEdit">
+     <property name="styleSheet">
+      <string notr="true">color: rgb(0, 85, 0);
+color: rgb(86, 86, 86);
+background-color: rgb(255, 254, 212);</string>
+     </property>
+     <property name="text">
+      <string>PLAYEr@1</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="selectMapButton">
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255, 255, 255);
+font: 9pt &quot;Arial&quot;;
+background-color: rgb(0, 85, 0);</string>
+     </property>
+     <property name="text">
+      <string>SELECT MAP</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

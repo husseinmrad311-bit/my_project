@@ -1,3 +1,9 @@
+/*
+Shows a list of available map files (*.txt) from maps folder.
+Lets the user select one and click Select → emits a signal mapChosen(mapPath).
+Or click Cancel → emits canceled().
+Also shows a background image that resizes smoothly when the window size changes
+*/
 #include "MapSelectionWindow.h"
 #include "ui_MapSelectionWindow.h"
 
@@ -15,7 +21,7 @@ MapSelectionWindow::MapSelectionWindow(QWidget *parent)
     setWindowTitle("Select Map");
 
     //load the background image using QPixmap
-    m_bgPixmap = QPixmap("D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/images/Map_selection.jpg");  // Add your image path in the resource system
+    m_bgPixmap = QPixmap("D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/images/Map_selection.jpg");
 
     if (m_bgPixmap.isNull()) {
         qDebug() << "ERROR: background image not found!";
@@ -32,14 +38,18 @@ MapSelectionWindow::MapSelectionWindow(QWidget *parent)
 
     connect(ui->cancelButton, &QPushButton::clicked,
             this, &MapSelectionWindow::onCancelClicked);
+    /*
+Select button -> run onSelectClicked()
+Cancel button -> run onCancelClicked()
+*/
 }
 
-MapSelectionWindow::~MapSelectionWindow()
+MapSelectionWindow::~MapSelectionWindow()//destructor
 {
     delete ui;
 }
 
-void MapSelectionWindow::setMapsFolder(const QString &folderPath)
+void MapSelectionWindow::setMapsFolder(const QString &folderPath)//this function is important because it’s how LoginPage tells MapSelectionWindow where maps exist
 {
     m_mapsFolder = folderPath;
 
@@ -47,6 +57,7 @@ void MapSelectionWindow::setMapsFolder(const QString &folderPath)
     qDebug() << "Maps folder path: " << m_mapsFolder;
 
     loadMaps();
+
 }
 
 
@@ -57,18 +68,15 @@ void MapSelectionWindow::loadMaps()
 
     QDir dir(m_mapsFolder);
     if (!dir.exists()) {
-        QMessageBox::warning(this, "Maps Missing",
-                             "Maps folder not found:\n" + m_mapsFolder);
+        QMessageBox::warning(this, "Maps Missing","Maps folder not found:\n" + m_mapsFolder);//if the folder doesn’t exist -> show warning and stop
         return;
     }
 
     //loads map1.txt, map2.txt ... and ANY other .txt (dynamic)
-    QStringList files = dir.entryList(QStringList() << "*.txt",
-                                      QDir::Files, QDir::Name);
+    QStringList files = dir.entryList(QStringList() << "*.txt", QDir::Files, QDir::Name);
 
     if (files.isEmpty()) {
-        QMessageBox::warning(this, "No Maps",
-                             "No .txt map files found in:\n" + m_mapsFolder);
+        QMessageBox::warning(this, "No Maps","No .txt map files found in:\n" + m_mapsFolder);
         return;
     }
 
@@ -114,21 +122,17 @@ void MapSelectionWindow::onCancelClicked()
     close();
 }
 
-void MapSelectionWindow::resizeEvent(QResizeEvent *event)
-{
+void MapSelectionWindow::resizeEvent(QResizeEvent *event){
     QWidget::resizeEvent(event);
     updateBackground();  //update background whenever window is resized
 }
 
-void MapSelectionWindow::updateBackground()
-{
+void MapSelectionWindow::updateBackground(){
     if (m_bgPixmap.isNull()) {
         return;
     }
 
     //if you didn't add backgroundLabel in UI, comment next line
     ui->backgroundLabel->setPixmap(
-        m_bgPixmap.scaled(ui->backgroundLabel->size(),
-                          Qt::IgnoreAspectRatio,
-                          Qt::SmoothTransformation));  // Set image to fit label size
+        m_bgPixmap.scaled(ui->backgroundLabel->size(),Qt::IgnoreAspectRatio,Qt::SmoothTransformation));  //set image to fit label size
 }

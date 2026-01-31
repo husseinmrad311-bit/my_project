@@ -6,34 +6,38 @@
 #include <QDir>
 #include "MapSelectionWindow.h"
 #include "GameBoardWindow.h"
-#include "MapLoader.h"
 #include <QMessageBox>
 
-LoginPage::LoginPage(QWidget *parent)
+
+/*
+ui_LoginPage.h: generated UI (widgets like labels/lineEdits/buttons)
+QPixmap: load images
+QCoreApplication + QDir: build a path to the maps folder next to the .exe
+QMessageBox: show validation , map loading errors
+MapSelectionWindow, GameBoardWindow: next windows in the app flow
+*/
+
+LoginPage::LoginPage(QWidget *parent)//This builds the UI designed in LoginPage.ui
     : QWidget(parent),
     ui(new Ui::LoginPage)
 {
     ui->setupUi(this);
-    QPixmap bg("D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/images/login_background.jpg");
+    QPixmap bg("D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/images/login_background.jpg");//load the image
 
     if (bg.isNull()) {
         qDebug() << "ERROR: login background image not found!";
     } else {
         ui->backgroundLabel->setPixmap(bg);
-        ui->backgroundLabel->setScaledContents(true);
+        ui->backgroundLabel->setScaledContents(true);//setScaledContents(true) makes the image stretch to fit the label
     }
 
     setWindowTitle(tr("Undaunted - Login"));
 
-    /*
-     note :
-     - You set the background image in LoginPage.ui
-       on the QLabel with objectName "backgroundLabel".
-        - You also set the instructions text there on "instructionsLabel".
-    */
-
     setupConnections();
 }
+//Reads text from the QLineEdit and trims spaces
+//These are clean getter functions for other classes if needed
+
 QString LoginPage::player1Name() const
 {
     return ui->player1LineEdit->text().trimmed();
@@ -44,21 +48,20 @@ QString LoginPage::player2Name() const
     return ui->player2LineEdit->text().trimmed();
 }
 
-LoginPage::~LoginPage()
+LoginPage::~LoginPage()//destructor
 {
     delete ui;
 }
 
-void LoginPage::setupConnections()
-{
+void LoginPage::setupConnections(){
     // UI WIDGETS :
-    //  - QLabel     backgroundLabel    (background image)
-    //  - QLabel     instructionsLabel  (text explaining the rules)
-    //  - QLineEdit  player1LineEdit
-    //  - QLineEdit  player2LineEdit
-    //  - QPushButton selectMapButton
+    //  - QLabel = backgroundLabel    (background image)
+    //  - QLabel = instructionsLabel  (text explaining the rules)
+    //  - QLineEdit = player1LineEdit
+    //  - QLineEdit = player2LineEdit
+    //  - QPushButton = selectMapButton
 
-    connect(ui->selectMapButton, &QPushButton::clicked,
+    connect(ui->selectMapButton, &QPushButton::clicked,//When user clicks "Select Map" -> run onSelectMapButtonClicked()
             this, &LoginPage::onSelectMapButtonClicked);
 }
 
@@ -67,13 +70,13 @@ bool LoginPage::validatePlayerName(const QString &name,
 {
     errorMessage.clear();
 
-    // 1)length at least 8
+    //length at least 8
     if (name.length() < 8) {
         errorMessage = tr("Name must be at least 8 characters long.");
         return false;
     }
 
-    // 2)first character must be an English letter
+    //first character must be an English letter
     const QChar first = name.at(0);
     if (!first.isLetter() ||
         !(first.unicode() < 128)) { //ensure ASCII letter if you like
@@ -106,11 +109,10 @@ bool LoginPage::validatePlayerName(const QString &name,
         problems << tr("must contain at least one special character");
 
     if (!problems.isEmpty()) {
-        errorMessage = tr("Name %1.")
-        .arg(problems.join(tr(", ")));
+        errorMessage = tr("Name %1.").arg(problems.join(tr(", ")));
         return false;
     }
-
+    //we can show now one combined message like:name must contain both uppercase and lowercase…, must contain at least one number…
     return true;
 }
 
@@ -130,19 +132,18 @@ void LoginPage::onSelectMapButtonClicked()
     if (!validatePlayerName(p2, err2))
         errorMessages << tr("Player 2: %1").arg(err2);
 
-    if (!errorMessages.isEmpty()) {
-        QMessageBox::warning(this, tr("Invalid Player Name(s)"),
-                             errorMessages.join("\n"));
+    if (!errorMessages.isEmpty()){
+        QMessageBox::warning(this, tr("Invalid Player Name(s)"),errorMessages.join("\n"));
         return;
     }
+    //So you might get: Player 1: Name must be at least 8 character or Player 2: Name must contain at least one special character or .....
 
-
-    //maps folder (same folder as exe)
+    //maps folder in the same directory as the executable
     const QString mapsFolder = QDir(QCoreApplication::applicationDirPath()).filePath("maps");
 
     //open MapSelectionWindow
-    auto *mapWin = new MapSelectionWindow();
-    mapWin->setAttribute(Qt::WA_DeleteOnClose, true);
+    auto *mapWin = new MapSelectionWindow();//
+    mapWin->setAttribute(Qt::WA_DeleteOnClose, true);//WA_DeleteOnClose means when the window closes, Qt deletes it automatically (prevents memory leaks)
     mapWin->setMapsFolder(mapsFolder);
     mapWin->show();
 
@@ -157,7 +158,7 @@ void LoginPage::onSelectMapButtonClicked()
                          //put player names into labels
                          game->setPlayerNames(p1, p2);
 
-                         // Load + render map
+                         //load + render map
                          if (!game->loadAndShowMap(mapPath, error)) {
                              QMessageBox::warning(this, "Map load failed", error);
                              delete game;

@@ -9,6 +9,7 @@ public:
     int rows = 0;
     int cols = 0;
     vector<std::vector<Cell>> grid; // grid[r][c]
+    void buildNeighbors();
 };
 
 #endif

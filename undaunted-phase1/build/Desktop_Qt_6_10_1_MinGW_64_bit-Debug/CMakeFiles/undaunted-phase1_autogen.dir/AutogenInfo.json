@@ -317,6 +317,12 @@
 	"HEADERS" : 
 	[
 		[
+			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/BFS.h",
+			"MU",
+			"EWIEGA46WW/moc_BFS.cpp",
+			null
+		],
+		[
 			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Board.h",
 			"MU",
 			"EWIEGA46WW/moc_Board.cpp",
@@ -326,6 +332,12 @@
 			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Cell.h",
 			"MU",
 			"EWIEGA46WW/moc_Cell.cpp",
+			null
+		],
+		[
+			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Game.h",
+			"MU",
+			"EWIEGA46WW/moc_Game.cpp",
 			null
 		],
 		[
@@ -350,6 +362,12 @@
 			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/MapSelectionWindow.h",
 			"MU",
 			"EWIEGA46WW/moc_MapSelectionWindow.cpp",
+			null
+		],
+		[
+			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Player.h",
+			"MU",
+			"EWIEGA46WW/moc_Player.cpp",
 			null
 		],
 		[
@@ -429,6 +447,9 @@
 	"SETTINGS_FILE" : "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/CMakeFiles/undaunted-phase1_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/BFS.cpp", "MU", null ],
+		[ "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Board.cpp", "MU", null ],
+		[ "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Game.cpp", "MU", null ],
 		[
 			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/GameBoardWindow.cpp",
 			"MU",
@@ -449,6 +470,7 @@
 			"MU",
 			null
 		],
+		[ "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Player.cpp", "MU", null ],
 		[
 			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/SplashScreen.cpp",
 			"MU",

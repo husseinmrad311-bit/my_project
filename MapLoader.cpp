@@ -1,4 +1,7 @@
-// ===== FILE: MapLoader.cpp =====
+// this file is the map file parser.
+// it reads a .txt map file and converts it into your internal structure:
+// MapData -> Board -> grid of Cell.
+
 #include "MapLoader.h"
 
 #include <QFile>
@@ -61,8 +64,7 @@ bool MapLoader::loadFromFile(const QString& filePath, MapData& out, QString& err
         // split by '|' and KEEP empty parts (important)
         QStringList parts = line.split('|', Qt::KeepEmptyParts);
 
-        // If the line starts/ends with '|', Qt gives empty first/last segment.
-        // Remove ONLY ONE empty at start/end (the framing pipes), but keep real spacing.
+        // Remove framing pipes only
         if (!parts.isEmpty() && parts.first().trimmed().isEmpty())
             parts.removeFirst();
         if (!parts.isEmpty() && parts.last().trimmed().isEmpty())
@@ -109,6 +111,10 @@ bool MapLoader::loadFromFile(const QString& filePath, MapData& out, QString& err
             board.grid[r][c] = cell;
         }
     }
+
+    // ===== Phase 2 – Day 1 =====
+    // Build adjacency graph after grid is fully populated
+    board.buildNeighbors();
 
     out.mapName = QFileInfo(filePath).baseName();
     out.description.clear();

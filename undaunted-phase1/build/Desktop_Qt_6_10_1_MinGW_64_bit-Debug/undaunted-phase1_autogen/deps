@@ -585,9 +585,14 @@ undaunted-phase1_autogen/timestamp: \
 	C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/time.h \
 	C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/vadefs.h \
 	C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h \
+	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/BFS.cpp \
+	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/BFS.h \
+	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Board.cpp \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Board.h \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/CMakeLists.txt \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Cell.h \
+	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Game.cpp \
+	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Game.h \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/GameBoardWindow.cpp \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/GameBoardWindow.h \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/LoginPage.cpp \
@@ -596,6 +601,8 @@ undaunted-phase1_autogen/timestamp: \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/MapLoader.h \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/MapSelectionWindow.cpp \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/MapSelectionWindow.h \
+	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Player.cpp \
+	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Player.h \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/SplashScreen.cpp \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/SplashScreen.h \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/main.cpp \

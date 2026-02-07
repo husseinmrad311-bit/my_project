@@ -27,6 +27,12 @@ qt_add_executable(undaunted-phase1
     Player.cpp
     BFS.h
     BFS.cpp
+    CellItem.h CellItem.cpp
+    Unit.h Unit.cpp
+    Card.h Card.cpp
+    DiceSystem.h DiceSystem.cpp
+    CombatSystem.h CombatSystem.cpp
+
 
 )
 

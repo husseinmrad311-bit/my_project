@@ -137,6 +137,46 @@ build CMakeFiles/undaunted-phase1.dir/BFS.cpp.obj: CXX_COMPILER__undaunted-phase
   OBJECT_DIR = CMakeFiles\undaunted-phase1.dir
   OBJECT_FILE_DIR = CMakeFiles\undaunted-phase1.dir
 
+build CMakeFiles/undaunted-phase1.dir/CellItem.cpp.obj: CXX_COMPILER__undaunted-phase1_unscanned_Debug D$:/Desktop/Undaunted-Phase1/Undaunted-Phase1/CellItem.cpp || cmake_object_order_depends_target_undaunted-phase1
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\undaunted-phase1.dir\CellItem.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -fdiagnostics-color=always
+  INCLUDES = -ID:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/undaunted-phase1_autogen/include -isystem C:/Qt/6.10.1/mingw_64/include/QtCore -isystem C:/Qt/6.10.1/mingw_64/include -isystem C:/Qt/6.10.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.10.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.10.1/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\undaunted-phase1.dir
+  OBJECT_FILE_DIR = CMakeFiles\undaunted-phase1.dir
+
+build CMakeFiles/undaunted-phase1.dir/Unit.cpp.obj: CXX_COMPILER__undaunted-phase1_unscanned_Debug D$:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Unit.cpp || cmake_object_order_depends_target_undaunted-phase1
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\undaunted-phase1.dir\Unit.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -fdiagnostics-color=always
+  INCLUDES = -ID:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/undaunted-phase1_autogen/include -isystem C:/Qt/6.10.1/mingw_64/include/QtCore -isystem C:/Qt/6.10.1/mingw_64/include -isystem C:/Qt/6.10.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.10.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.10.1/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\undaunted-phase1.dir
+  OBJECT_FILE_DIR = CMakeFiles\undaunted-phase1.dir
+
+build CMakeFiles/undaunted-phase1.dir/Card.cpp.obj: CXX_COMPILER__undaunted-phase1_unscanned_Debug D$:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Card.cpp || cmake_object_order_depends_target_undaunted-phase1
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\undaunted-phase1.dir\Card.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -fdiagnostics-color=always
+  INCLUDES = -ID:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/undaunted-phase1_autogen/include -isystem C:/Qt/6.10.1/mingw_64/include/QtCore -isystem C:/Qt/6.10.1/mingw_64/include -isystem C:/Qt/6.10.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.10.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.10.1/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\undaunted-phase1.dir
+  OBJECT_FILE_DIR = CMakeFiles\undaunted-phase1.dir
+
+build CMakeFiles/undaunted-phase1.dir/DiceSystem.cpp.obj: CXX_COMPILER__undaunted-phase1_unscanned_Debug D$:/Desktop/Undaunted-Phase1/Undaunted-Phase1/DiceSystem.cpp || cmake_object_order_depends_target_undaunted-phase1
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\undaunted-phase1.dir\DiceSystem.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -fdiagnostics-color=always
+  INCLUDES = -ID:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/undaunted-phase1_autogen/include -isystem C:/Qt/6.10.1/mingw_64/include/QtCore -isystem C:/Qt/6.10.1/mingw_64/include -isystem C:/Qt/6.10.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.10.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.10.1/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\undaunted-phase1.dir
+  OBJECT_FILE_DIR = CMakeFiles\undaunted-phase1.dir
+
+build CMakeFiles/undaunted-phase1.dir/CombatSystem.cpp.obj: CXX_COMPILER__undaunted-phase1_unscanned_Debug D$:/Desktop/Undaunted-Phase1/Undaunted-Phase1/CombatSystem.cpp || cmake_object_order_depends_target_undaunted-phase1
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\undaunted-phase1.dir\CombatSystem.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -fdiagnostics-color=always
+  INCLUDES = -ID:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/undaunted-phase1_autogen/include -isystem C:/Qt/6.10.1/mingw_64/include/QtCore -isystem C:/Qt/6.10.1/mingw_64/include -isystem C:/Qt/6.10.1/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.10.1/mingw_64/include/QtWidgets -isystem C:/Qt/6.10.1/mingw_64/include/QtGui
+  OBJECT_DIR = CMakeFiles\undaunted-phase1.dir
+  OBJECT_FILE_DIR = CMakeFiles\undaunted-phase1.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target undaunted-phase1
@@ -145,7 +185,7 @@ build CMakeFiles/undaunted-phase1.dir/BFS.cpp.obj: CXX_COMPILER__undaunted-phase
 #############################################
 # Link the executable undaunted-phase1.exe
 
-build undaunted-phase1.exe: CXX_EXECUTABLE_LINKER__undaunted-phase1_Debug CMakeFiles/undaunted-phase1.dir/undaunted-phase1_autogen/mocs_compilation.cpp.obj CMakeFiles/undaunted-phase1.dir/main.cpp.obj CMakeFiles/undaunted-phase1.dir/SplashScreen.cpp.obj CMakeFiles/undaunted-phase1.dir/LoginPage.cpp.obj CMakeFiles/undaunted-phase1.dir/MapSelectionWindow.cpp.obj CMakeFiles/undaunted-phase1.dir/MapLoader.cpp.obj CMakeFiles/undaunted-phase1.dir/GameBoardWindow.cpp.obj CMakeFiles/undaunted-phase1.dir/Board.cpp.obj CMakeFiles/undaunted-phase1.dir/Game.cpp.obj CMakeFiles/undaunted-phase1.dir/Player.cpp.obj CMakeFiles/undaunted-phase1.dir/BFS.cpp.obj | C$:/Qt/6.10.1/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.10.1/mingw_64/lib/libQt6Gui.a C$:/Qt/6.10.1/mingw_64/lib/libQt6Core.a C$:/Qt/6.10.1/mingw_64/lib/libQt6EntryPoint.a || undaunted-phase1_autogen undaunted-phase1_autogen_timestamp_deps
+build undaunted-phase1.exe: CXX_EXECUTABLE_LINKER__undaunted-phase1_Debug CMakeFiles/undaunted-phase1.dir/undaunted-phase1_autogen/mocs_compilation.cpp.obj CMakeFiles/undaunted-phase1.dir/main.cpp.obj CMakeFiles/undaunted-phase1.dir/SplashScreen.cpp.obj CMakeFiles/undaunted-phase1.dir/LoginPage.cpp.obj CMakeFiles/undaunted-phase1.dir/MapSelectionWindow.cpp.obj CMakeFiles/undaunted-phase1.dir/MapLoader.cpp.obj CMakeFiles/undaunted-phase1.dir/GameBoardWindow.cpp.obj CMakeFiles/undaunted-phase1.dir/Board.cpp.obj CMakeFiles/undaunted-phase1.dir/Game.cpp.obj CMakeFiles/undaunted-phase1.dir/Player.cpp.obj CMakeFiles/undaunted-phase1.dir/BFS.cpp.obj CMakeFiles/undaunted-phase1.dir/CellItem.cpp.obj CMakeFiles/undaunted-phase1.dir/Unit.cpp.obj CMakeFiles/undaunted-phase1.dir/Card.cpp.obj CMakeFiles/undaunted-phase1.dir/DiceSystem.cpp.obj CMakeFiles/undaunted-phase1.dir/CombatSystem.cpp.obj | C$:/Qt/6.10.1/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.10.1/mingw_64/lib/libQt6Gui.a C$:/Qt/6.10.1/mingw_64/lib/libQt6Core.a C$:/Qt/6.10.1/mingw_64/lib/libQt6EntryPoint.a || undaunted-phase1_autogen undaunted-phase1_autogen_timestamp_deps
   FLAGS = -DQT_QML_DEBUG -g
   LINK_FLAGS = -mwindows
   LINK_LIBRARIES = C:/Qt/6.10.1/mingw_64/lib/libQt6Widgets.a  C:/Qt/6.10.1/mingw_64/lib/libQt6Gui.a  C:/Qt/6.10.1/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -lmingw32  C:/Qt/6.10.1/mingw_64/lib/libQt6EntryPoint.a  -lshell32  -ld3d11  -ldxgi  -ldxguid  -ld3d12  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32

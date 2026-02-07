@@ -329,9 +329,33 @@
 			null
 		],
 		[
+			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Card.h",
+			"MU",
+			"EWIEGA46WW/moc_Card.cpp",
+			null
+		],
+		[
 			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Cell.h",
 			"MU",
 			"EWIEGA46WW/moc_Cell.cpp",
+			null
+		],
+		[
+			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/CellItem.h",
+			"MU",
+			"EWIEGA46WW/moc_CellItem.cpp",
+			null
+		],
+		[
+			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/CombatSystem.h",
+			"MU",
+			"EWIEGA46WW/moc_CombatSystem.cpp",
+			null
+		],
+		[
+			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/DiceSystem.h",
+			"MU",
+			"EWIEGA46WW/moc_DiceSystem.cpp",
 			null
 		],
 		[
@@ -374,6 +398,12 @@
 			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/SplashScreen.h",
 			"MU",
 			"EWIEGA46WW/moc_SplashScreen.cpp",
+			null
+		],
+		[
+			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Unit.h",
+			"MU",
+			"EWIEGA46WW/moc_Unit.cpp",
 			null
 		]
 	],
@@ -449,6 +479,22 @@
 	[
 		[ "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/BFS.cpp", "MU", null ],
 		[ "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Board.cpp", "MU", null ],
+		[ "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Card.cpp", "MU", null ],
+		[
+			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/CellItem.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/CombatSystem.cpp",
+			"MU",
+			null
+		],
+		[
+			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/DiceSystem.cpp",
+			"MU",
+			null
+		],
 		[ "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Game.cpp", "MU", null ],
 		[
 			"D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/GameBoardWindow.cpp",
@@ -476,6 +522,7 @@
 			"MU",
 			null
 		],
+		[ "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Unit.cpp", "MU", null ],
 		[ "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/main.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],

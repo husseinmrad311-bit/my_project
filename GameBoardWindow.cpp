@@ -1,5 +1,9 @@
 #include "GameBoardWindow.h"
 #include "ui_GameBoardWindow.h"
+
+#include "CellItem.h"
+#include "Cell.h"   //  for Side / AgentType
+
 #include <QTimer>
 #include <QDebug>
 #include <QMessageBox>
@@ -11,7 +15,8 @@ GameBoardWindow::GameBoardWindow(QWidget *parent)
     : QWidget(parent),
     ui(new Ui::GameBoardWindow)
 {
-    ui->setupUi(this);ui->boardView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->setupUi(this);
+    ui->boardView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->boardView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->boardView->setAlignment(Qt::AlignCenter);
 
@@ -20,7 +25,6 @@ GameBoardWindow::GameBoardWindow(QWidget *parent)
     m_scene = new QGraphicsScene(this);
     ui->boardView->setScene(m_scene);
 
-    //makes the view follow resizing nicely
     ui->boardView->setRenderHint(QPainter::Antialiasing, true);
 }
 
@@ -54,7 +58,6 @@ bool GameBoardWindow::loadAndShowMap(const QString& mapPath, QString& error)
     return true;
 }
 
-
 void GameBoardWindow::renderBoard(const MapData& data)
 {
     m_scene->clear();
@@ -62,10 +65,9 @@ void GameBoardWindow::renderBoard(const MapData& data)
     const int rows = data.board.rows;
     const int cols = data.board.cols;
 
-    const int cellSize = 60;   // bigger looks closer to your reference
+    const int cellSize = 60;
     const int gap = 8;
 
-    // Count how many REAL tiles in each row (type != -1)
     QVector<int> rowTileCounts(rows, 0);
     int maxTilesInAnyRow = 0;
 
@@ -82,61 +84,52 @@ void GameBoardWindow::renderBoard(const MapData& data)
 
     for (int r = 0; r < rows; ++r) {
 
-        // Center this row relative to the widest row
         const int tilesThisRow = rowTileCounts[r];
-        const qreal rowOffsetTiles = (maxTilesInAnyRow - tilesThisRow) / 2.0; // can be 0.5
+        const qreal rowOffsetTiles =
+            (maxTilesInAnyRow - tilesThisRow) / 2.0;
 
         int tileIndexInRow = 0;
 
         for (int c = 0; c < cols; ++c) {
             const Cell& cell = data.board.grid[r][c];
 
-            // spacing segment => don't draw, but also don't increment tileIndexInRow
             if (cell.type == -1 || cell.tileId.isEmpty())
                 continue;
 
-            const qreal x = (rowOffsetTiles + tileIndexInRow) * (cellSize + gap);
-            const qreal y = r * (cellSize + gap);
+            const qreal x =
+                (rowOffsetTiles + tileIndexInRow) * (cellSize + gap);
+            const qreal y =
+                r * (cellSize + gap);
 
-            QRectF rect(x, y, cellSize, cellSize);
+            auto* cellItem =
+                new CellItem(cell.tileId, cell.type, cellSize);
 
-            QColor color;
-            switch (cell.type) {
-            case 0: color = QColor(220, 220, 220); break;
-            case 1: color = QColor(80, 170, 80);   break;
-            case 2: color = QColor(80, 120, 200);  break;
-            default: color = QColor(200, 200, 80); break;
-            }
+            cellItem->setPos(x, y);
 
-            auto *item = m_scene->addRect(rect, QPen(Qt::black), QBrush(color));
-            item->setToolTip(cell.tileId + " : " + QString::number(cell.type));
+            // 🔴 TEMPORARY VISUAL TEST (Day 2 validation ONLY)
+            if ((r + c) % 3 == 0)
+                cellItem->setMarked(true);
 
-            // Text like reference (2 lines)
-            const QString text = cell.tileId + "\n" + QString::number(cell.type);
-            auto *textItem = m_scene->addText(text);
+            if ((r + c) % 3 == 1)
+                cellItem->setControlledBy(Side::A);   // ✅ FIXED
 
-            QFont f = textItem->font();
-            f.setBold(true);
-            f.setPointSize(12);
-            textItem->setFont(f);
+            if ((r + c) % 3 == 2)
+                cellItem->setAgent(AgentType::Scout);
 
-            QRectF tb = textItem->boundingRect();
-            textItem->setPos(
-                rect.center().x() - tb.width() / 2.0,
-                rect.center().y() - tb.height() / 2.0
-                );
+            cellItem->setToolTip(
+                cell.tileId + " : " + QString::number(cell.type));
 
-            // make text readable
-            textItem->setDefaultTextColor(Qt::black);
-            if (cell.type == 2) textItem->setDefaultTextColor(Qt::white);
+            m_scene->addItem(cellItem);
 
             tileIndexInRow++;
         }
     }
 
-    ui->boardView->fitInView(m_scene->itemsBoundingRect(), Qt::KeepAspectRatio);
+    ui->boardView->fitInView(
+        m_scene->itemsBoundingRect(),
+        Qt::KeepAspectRatio
+        );
 }
-
 
 void GameBoardWindow::fitBoardToView()
 {
@@ -149,15 +142,12 @@ void GameBoardWindow::fitBoardToView()
 
     ui->boardView->setSceneRect(r);
 
-
-    ui->boardView->resetTransform();                //this fixes most "still tiny" cases
+    ui->boardView->resetTransform();
     ui->boardView->fitInView(r, Qt::KeepAspectRatio);
 }
-
 
 void GameBoardWindow::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     fitBoardToView();
 }
-

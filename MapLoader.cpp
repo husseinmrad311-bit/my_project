@@ -10,6 +10,10 @@
 #include <QFileInfo>
 #include <QRegularExpression>
 
+// --------------------------------------------------
+// Layout parsing (UNCHANGED)
+// --------------------------------------------------
+
 static bool parseCellSegment(const QString& seg, Cell& outCell)
 {
     const QString s = seg.trimmed();
@@ -32,7 +36,32 @@ static bool parseCellSegment(const QString& seg, Cell& outCell)
     return true;
 }
 
-bool MapLoader::loadFromFile(const QString& filePath, MapData& out, QString& errorMessage)
+// --------------------------------------------------
+// Phase 2: helper functions
+// --------------------------------------------------
+
+static Side parseSide(const QString& s)
+{
+    if (s == "A") return Side::A;
+    if (s == "B") return Side::B;
+    return Side::None;
+}
+
+static AgentType parseAgentType(const QString& s)
+{
+    if (s == "Scout")     return AgentType::Scout;
+    if (s == "Sniper")    return AgentType::Sniper;
+    if (s == "Seargeant") return AgentType::Seargeant;
+    return AgentType::None;
+}
+
+// --------------------------------------------------
+// Main loader
+// --------------------------------------------------
+
+bool MapLoader::loadFromFile(const QString& filePath,
+                             MapData& out,
+                             QString& errorMessage)
 {
     errorMessage.clear();
     out = MapData{};
@@ -48,23 +77,18 @@ bool MapLoader::loadFromFile(const QString& filePath, MapData& out, QString& err
     QList<QList<Cell>> parsedRows;
     int maxCols = 0;
 
-    // Removes optional line number prefix: "1 |A01:0|..." or "1|A01:0|..."
     static const QRegularExpression leadingNumber(R"(^\s*\d+\s*)");
 
     while (!in.atEnd()) {
         QString line = in.readLine();
 
-        // if the line doesn't look like map data, skip
         if (!line.contains('|') || !line.contains(':'))
             continue;
 
-        // remove optional "row number" at start
         line.remove(leadingNumber);
 
-        // split by '|' and KEEP empty parts (important)
         QStringList parts = line.split('|', Qt::KeepEmptyParts);
 
-        // Remove framing pipes only
         if (!parts.isEmpty() && parts.first().trimmed().isEmpty())
             parts.removeFirst();
         if (!parts.isEmpty() && parts.last().trimmed().isEmpty())
@@ -79,7 +103,6 @@ bool MapLoader::loadFromFile(const QString& filePath, MapData& out, QString& err
         for (const QString& seg : parts) {
             Cell c;
             if (!parseCellSegment(seg, c)) {
-                // bad segment => treat as spacing
                 c.tileId.clear();
                 c.type = -1;
             }
@@ -91,7 +114,7 @@ bool MapLoader::loadFromFile(const QString& filePath, MapData& out, QString& err
     }
 
     if (parsedRows.isEmpty() || maxCols <= 0) {
-        errorMessage = "No map data found. Expected rows like:\n|A01:0|A02:1| |A05:1|";
+        errorMessage = "No map data found.";
         return false;
     }
 
@@ -104,7 +127,7 @@ bool MapLoader::loadFromFile(const QString& filePath, MapData& out, QString& err
         for (int c = 0; c < board.cols; ++c) {
             Cell cell;
             cell.tileId.clear();
-            cell.type = -1; // default spacing
+            cell.type = -1;
             if (c < parsedRows[r].size())
                 cell = parsedRows[r][c];
 
@@ -112,11 +135,64 @@ bool MapLoader::loadFromFile(const QString& filePath, MapData& out, QString& err
         }
     }
 
-    // ===== Phase 2 – Day 1 =====
-    // Build adjacency graph after grid is fully populated
+    // Build adjacency graph
     board.buildNeighbors();
 
-    out.mapName = QFileInfo(filePath).baseName();
+    // --------------------------------------------------
+    // Phase 2 – parse map_state.txt
+    // --------------------------------------------------
+
+    QFileInfo info(filePath);
+    QString statePath =
+        info.path() + "/" + info.completeBaseName() + "_state.txt";
+
+    out.stateFilePath = statePath;
+
+    QFile stateFile(statePath);
+    if (stateFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+
+        QTextStream sin(&stateFile);
+
+        while (!sin.atEnd()) {
+            QString line = sin.readLine().trimmed();
+            if (line.isEmpty())
+                continue;
+
+            // Format: B13:A,Sniper  OR  A23:B,Mark
+            QStringList parts = line.split(':');
+            if (parts.size() != 2)
+                continue;
+
+            QString cellId = parts[0].toUpper();
+            QStringList rhs = parts[1].split(',');
+            if (rhs.size() != 2)
+                continue;
+
+            Side side = parseSide(rhs[0].trimmed());
+            QString typeStr = rhs[1].trimmed();
+
+            for (int r = 0; r < board.rows; ++r) {
+                for (int c = 0; c < board.cols; ++c) {
+                    Cell& cell = board.grid[r][c];
+                    if (cell.tileId == cellId) {
+
+                        if (typeStr == "Mark") {
+                            cell.marked = true;
+                            cell.markedBy = side;
+                            cell.controlledBy = side;
+                        } else {
+                            cell.agent = parseAgentType(typeStr);
+                            cell.agentSide = side;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // --------------------------------------------------
+
+    out.mapName = info.baseName();
     out.description.clear();
     out.board = board;
     return true;

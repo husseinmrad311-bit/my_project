@@ -3,13 +3,20 @@
 
 #include "Cell.h"
 #include <vector>
-using namespace std ;
+
+// ================================
+// Board (pure data container)
+// ================================
+
 class Board {
 public:
     int rows = 0;
     int cols = 0;
-    vector<std::vector<Cell>> grid; // grid[r][c]
+
+    // grid[r][c]
+    std::vector<std::vector<Cell>> grid;
+
     void buildNeighbors();
 };
 
-#endif
+#endif // BOARD_H

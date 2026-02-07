@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-5628dc0e41d61d99a716.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "undaunted-phase1",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "undaunted-phase1::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-undaunted-phase1-Debug-b014e8a9a0853eaf15c3.json",
+					"name" : "undaunted-phase1",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "undaunted-phase1_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-undaunted-phase1_autogen-Debug-0076f8a24c00d0b59ab4.json",
+					"name" : "undaunted-phase1_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "undaunted-phase1_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-undaunted-phase1_autogen_timestamp_deps-Debug-3430bd204edabbd01408.json",
+					"name" : "undaunted-phase1_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug",
+		"source" : "D:/Desktop/Undaunted-Phase1/Undaunted-Phase1"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

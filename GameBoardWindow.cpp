@@ -1,151 +1,262 @@
 #include "GameBoardWindow.h"
-#include "ui_GameBoardWindow.h"
 
-#include "CellItem.h"
-#include "Cell.h"   //  for Side / AgentType
-
-#include <QTimer>
-#include <QDebug>
-#include <QMessageBox>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QGraphicsRectItem>
 #include <QPen>
 #include <QBrush>
+#include <QPainter>
 
+// ============================================
+// Constructor
+// ============================================
 GameBoardWindow::GameBoardWindow(QWidget *parent)
-    : QWidget(parent),
-    ui(new Ui::GameBoardWindow)
+    : QWidget(parent)
 {
-    ui->setupUi(this);
-    ui->boardView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    ui->boardView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    ui->boardView->setAlignment(Qt::AlignCenter);
-
     setWindowTitle("Undaunted - Game Board");
 
     m_scene = new QGraphicsScene(this);
-    ui->boardView->setScene(m_scene);
 
-    ui->boardView->setRenderHint(QPainter::Antialiasing, true);
+    buildUI();
 }
 
-GameBoardWindow::~GameBoardWindow()
+// ============================================
+// Build UI
+// ============================================
+void GameBoardWindow::buildUI()
 {
-    delete ui;
+    QVBoxLayout* mainLayout = new QVBoxLayout(this);
+
+    // ===== Top Bar =====
+    QHBoxLayout* topBar = new QHBoxLayout();
+
+    turnLabel = new QLabel("CURRENT TURN:");
+    currentPlayerLabel = new QLabel("-");
+    currentCardLabel = new QLabel("Current Card: -");
+
+    topBar->addWidget(turnLabel);
+    topBar->addWidget(currentPlayerLabel);
+    topBar->addStretch();
+    topBar->addWidget(currentCardLabel);
+
+    // ===== Feedback Bar =====
+    QHBoxLayout* feedbackBar = new QHBoxLayout();
+    feedbackLabel = new QLabel("Ready.");
+    feedbackBar->addWidget(feedbackLabel);
+
+    // ===== Action Bar =====
+    QHBoxLayout* actionBar = new QHBoxLayout();
+
+    moveButton = new QPushButton("Move");
+    attackButton = new QPushButton("Attack");
+    scoutButton = new QPushButton("Scout");
+    controlButton = new QPushButton("Control");
+    endTurnButton = new QPushButton("End Turn");
+
+    actionBar->addWidget(moveButton);
+    actionBar->addWidget(attackButton);
+    actionBar->addWidget(scoutButton);
+    actionBar->addWidget(controlButton);
+    actionBar->addStretch();
+    actionBar->addWidget(endTurnButton);
+
+    // ===== Board View =====
+    boardView = new QGraphicsView();
+    boardView->setScene(m_scene);
+    boardView->setRenderHint(QPainter::Antialiasing);
+    boardView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    boardView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    // ===== Footer =====
+    QHBoxLayout* footerBar = new QHBoxLayout();
+    deckInfoLabel = new QLabel("-");
+    footerBar->addStretch();
+    footerBar->addWidget(deckInfoLabel);
+    footerBar->addStretch();
+
+    // ===== Add to Layout =====
+    mainLayout->addLayout(topBar);
+    mainLayout->addLayout(feedbackBar);
+    mainLayout->addLayout(actionBar);
+    mainLayout->addWidget(boardView, 1);
+    mainLayout->addLayout(footerBar);
+
+    // ===== Connections =====
+    connect(moveButton, &QPushButton::clicked,
+            this, [this]() { handleAction("move"); });
+
+    connect(attackButton, &QPushButton::clicked,
+            this, [this]() { handleAction("attack"); });
+
+    connect(scoutButton, &QPushButton::clicked,
+            this, [this]() { handleAction("scout"); });
+
+    connect(controlButton, &QPushButton::clicked,
+            this, [this]() { handleAction("control"); });
+
+    connect(endTurnButton, &QPushButton::clicked,
+            this, [this]() {
+                if (!m_game) return;
+                m_game->nextTurn();
+                updateUI();
+            });
 }
 
-void GameBoardWindow::setPlayerNames(const QString& p1, const QString& p2)
+// ============================================
+// Inject Game
+// ============================================
+void GameBoardWindow::setGame(Game* game)
 {
-    ui->player1Label->setText(p1);
-    ui->player2Label->setText(p2);
+    m_game = game;
+    updateUI();
 }
 
-bool GameBoardWindow::loadAndShowMap(const QString& mapPath, QString& error)
+// ============================================
+// Handle Actions
+// ============================================
+void GameBoardWindow::handleAction(const std::string& action)
 {
-    MapData data;
-    if (!MapLoader::loadFromFile(mapPath, data, error)) {
-        return false;
+    if (!m_game) return;
+
+    bool success = m_game->performAction(action, "");
+
+    feedbackLabel->setText(success ?
+                               "Action Successful" :
+                               "Action Failed");
+
+    updateUI();
+}
+
+// ============================================
+// Update UI
+// ============================================
+void GameBoardWindow::updateUI()
+{
+    if (!m_game) return;
+
+    refreshHUD();
+    renderBoardFromGame();
+    fitBoardToView();
+}
+
+// ============================================
+// Update HUD
+// ============================================
+void GameBoardWindow::refreshHUD()
+{
+    if (!m_game) return;
+
+    Player* current = m_game->getCurrentPlayer();
+    if (!current) return;
+
+    currentPlayerLabel->setText(
+        QString::fromStdString(current->getName())
+        );
+
+    if (m_game->getCurrentCard())
+    {
+        currentCardLabel->setText(
+            "Current Card: " +
+            QString::fromStdString(
+                m_game->getCurrentCard()->getTypeName()
+                )
+            );
     }
 
-    if (ui->mapLabel)
-        ui->mapLabel->setText(data.mapName);
+    deckInfoLabel->setText(
+        "Deck Size: " +
+        QString::number(current->getDeckSize())
+        );
 
-    renderBoard(data);
-
-    QTimer::singleShot(0, this, [this]() {
-        fitBoardToView();
-    });
-
-    return true;
+    if (m_game->isGameOver())
+        feedbackLabel->setText("GAME OVER");
 }
 
-void GameBoardWindow::renderBoard(const MapData& data)
+// ============================================
+// Render Board From Engine
+// ============================================
+void GameBoardWindow::renderBoardFromGame()
 {
+    if (!m_game) return;
+
     m_scene->clear();
 
-    const int rows = data.board.rows;
-    const int cols = data.board.cols;
+    const Board& board = m_game->getBoard();
 
     const int cellSize = 60;
     const int gap = 8;
 
-    QVector<int> rowTileCounts(rows, 0);
-    int maxTilesInAnyRow = 0;
-
-    for (int r = 0; r < rows; ++r) {
-        int cnt = 0;
-        for (int c = 0; c < cols; ++c) {
-            const Cell& cell = data.board.grid[r][c];
-            if (cell.type != -1 && !cell.tileId.isEmpty())
-                cnt++;
-        }
-        rowTileCounts[r] = cnt;
-        maxTilesInAnyRow = qMax(maxTilesInAnyRow, cnt);
-    }
-
-    for (int r = 0; r < rows; ++r) {
-
-        const int tilesThisRow = rowTileCounts[r];
-        const qreal rowOffsetTiles =
-            (maxTilesInAnyRow - tilesThisRow) / 2.0;
-
-        int tileIndexInRow = 0;
-
-        for (int c = 0; c < cols; ++c) {
-            const Cell& cell = data.board.grid[r][c];
+    for (int r = 0; r < board.rows; ++r)
+    {
+        for (int c = 0; c < board.cols; ++c)
+        {
+            const Cell& cell = board.grid[r][c];
 
             if (cell.type == -1 || cell.tileId.isEmpty())
                 continue;
 
-            const qreal x =
-                (rowOffsetTiles + tileIndexInRow) * (cellSize + gap);
-            const qreal y =
-                r * (cellSize + gap);
+            qreal x = c * (cellSize + gap);
+            qreal y = r * (cellSize + gap);
 
-            auto* cellItem =
-                new CellItem(cell.tileId, cell.type, cellSize);
+            QRectF rect(x, y, cellSize, cellSize);
 
-            cellItem->setPos(x, y);
+            QColor baseColor;
 
-            // 🔴 TEMPORARY VISUAL TEST (Day 2 validation ONLY)
-            if ((r + c) % 3 == 0)
-                cellItem->setMarked(true);
+            switch (cell.type)
+            {
+            case 0: baseColor = QColor(220,220,220); break;
+            case 1: baseColor = QColor(80,170,80); break;
+            case 2: baseColor = QColor(80,120,200); break;
+            default: baseColor = Qt::gray;
+            }
 
-            if ((r + c) % 3 == 1)
-                cellItem->setControlledBy(Side::A);   // ✅ FIXED
+            m_scene->addRect(rect, QPen(Qt::black), QBrush(baseColor));
 
-            if ((r + c) % 3 == 2)
-                cellItem->setAgent(AgentType::Scout);
+            // Draw agent if exists
+            if (cell.agent != AgentType::None)
+            {
+                QColor pieceColor =
+                    (cell.agentSide == Side::A)
+                        ? Qt::red
+                        : Qt::blue;
 
-            cellItem->setToolTip(
-                cell.tileId + " : " + QString::number(cell.type));
+                QRectF inner = rect.adjusted(15,15,-15,-15);
+                m_scene->addEllipse(inner,
+                                    QPen(Qt::black),
+                                    QBrush(pieceColor));
+            }
 
-            m_scene->addItem(cellItem);
-
-            tileIndexInRow++;
+            // Tile label
+            auto textItem = m_scene->addText(cell.tileId);
+            QRectF tb = textItem->boundingRect();
+            textItem->setPos(
+                rect.center().x() - tb.width()/2,
+                rect.center().y() - tb.height()/2
+                );
         }
     }
-
-    ui->boardView->fitInView(
-        m_scene->itemsBoundingRect(),
-        Qt::KeepAspectRatio
-        );
 }
 
+// ============================================
+// Fit Board
+// ============================================
 void GameBoardWindow::fitBoardToView()
 {
-    if (!ui->boardView || !ui->boardView->scene())
+    if (!boardView || !boardView->scene())
         return;
 
-    QRectF r = ui->boardView->scene()->itemsBoundingRect();
+    QRectF r = boardView->scene()->itemsBoundingRect();
     if (r.isNull())
         return;
 
-    ui->boardView->setSceneRect(r);
-
-    ui->boardView->resetTransform();
-    ui->boardView->fitInView(r, Qt::KeepAspectRatio);
+    boardView->setSceneRect(r);
+    boardView->resetTransform();
+    boardView->fitInView(r, Qt::KeepAspectRatio);
 }
 
+// ============================================
+// Resize
+// ============================================
 void GameBoardWindow::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);

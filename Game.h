@@ -5,11 +5,12 @@
 #include "Player.h"
 #include <vector>
 #include <memory>
+#include <string>
 
 class Game {
 public:
-    Game();
-
+    Game(const std::string& name1,const std::string& name2);
+    bool loadMap(const std::string& path);
     // Core state
     Board board;
     std::vector<std::unique_ptr<Player>> players;
@@ -17,8 +18,9 @@ public:
     // Turn system state
     int currentPlayerIndex = 0;
     bool gameStarted = false;
+    bool gameOver = false;
     int turnCount = 0;
-    Card* currentCard = nullptr; // Card drawn this turn
+    Card* currentCard = nullptr;
 
     // Lifecycle
     void startGame();
@@ -26,31 +28,38 @@ public:
     void endTurn();
     bool isGameOver() const;
 
-    // Card actions (as per PDF)
-    bool drawCard();                     // Draw top card for current player
-    bool performAction(const std::string& actionType, const std::string& target = "");
-    bool returnCardToBottom();           // Move current card to bottom of deck
+    // Card actions
+    bool drawCard();
+    bool performAction(const std::string& actionType,const std::string& target = "");
+    bool returnCardToBottom();
 
-    // Specific actions (will be expanded later)
+    // Actions
     bool movePiece(AgentType agentType, const std::string& targetCoord);
     bool attackPiece(AgentType agentType, const std::string& targetCoord);
     bool scoutTile(const std::string& targetCoord);
     bool controlTile(const std::string& targetCoord);
     bool releaseTile(const std::string& targetCoord);
 
-    // Getters
+    // Game state
     Player* getCurrentPlayer() const;
     Player* getOpponent() const;
-    Player* getPlayer(int id) const;
+    Card* getCurrentCard() const { return currentCard; }
+    const Board& getBoard() const;
 
-    // Game state display
     void displayGameState() const;
     void displayTurnInfo() const;
 
 private:
+
     void initializePlayers();
     void initializeBoard();
-    bool isActionAllowed(AgentType agentType, const std::string& actionType);
+
+    bool isActionAllowed(AgentType agentType,
+                         const std::string& actionType);
+
+    // 🔑 MUST MATCH Game.cpp EXACTLY
+    void checkWinConditions();
+    int countControlledHouses(Player* player) const;
 };
 
 #endif

@@ -165,8 +165,10 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtGui/qinputmethod.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qkeysequence.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpaintdevice.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qpainter.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpalette.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpen.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qpicture.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpixelformat.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpixmap.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpointingdevice.h \
@@ -176,6 +178,8 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtGui/qrgba64.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qscreen.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qscreen_platform.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qtextdocument.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qtextoption.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qtgui-config.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qtguiexports.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qtguiglobal.h \
@@ -185,8 +189,18 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtGui/qwindowdefs.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qwindowdefs_win.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsScene \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsView \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/QLabel \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/QPushButton \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/QWidget \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qabstractbutton.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qframe.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicsscene.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicsview.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qlabel.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qpushbutton.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qscrollarea.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qsizepolicy.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qtwidgets-config.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qtwidgetsexports.h \
@@ -420,5 +434,8 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h \
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wctype.h \
   D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Board.h \
+  D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Card.h \
   D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Cell.h \
-  D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/MapLoader.h
+  D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Game.h \
+  D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Player.h \
+  D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Unit.h

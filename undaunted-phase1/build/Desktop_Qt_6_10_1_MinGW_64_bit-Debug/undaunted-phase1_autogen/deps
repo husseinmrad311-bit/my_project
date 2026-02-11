@@ -167,8 +167,10 @@ undaunted-phase1_autogen/timestamp: \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qinputmethod.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qkeysequence.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qpaintdevice.h \
+	C:/Qt/6.10.1/mingw_64/include/QtGui/qpainter.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qpalette.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qpen.h \
+	C:/Qt/6.10.1/mingw_64/include/QtGui/qpicture.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qpixelformat.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qpixmap.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qpointingdevice.h \
@@ -178,6 +180,8 @@ undaunted-phase1_autogen/timestamp: \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qrgba64.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qscreen.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qscreen_platform.h \
+	C:/Qt/6.10.1/mingw_64/include/QtGui/qtextdocument.h \
+	C:/Qt/6.10.1/mingw_64/include/QtGui/qtextoption.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qtgui-config.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qtguiexports.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qtguiglobal.h \
@@ -187,8 +191,18 @@ undaunted-phase1_autogen/timestamp: \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qwindowdefs.h \
 	C:/Qt/6.10.1/mingw_64/include/QtGui/qwindowdefs_win.h \
 	C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsScene \
+	C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsView \
+	C:/Qt/6.10.1/mingw_64/include/QtWidgets/QLabel \
+	C:/Qt/6.10.1/mingw_64/include/QtWidgets/QPushButton \
 	C:/Qt/6.10.1/mingw_64/include/QtWidgets/QWidget \
+	C:/Qt/6.10.1/mingw_64/include/QtWidgets/qabstractbutton.h \
+	C:/Qt/6.10.1/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+	C:/Qt/6.10.1/mingw_64/include/QtWidgets/qframe.h \
 	C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicsscene.h \
+	C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicsview.h \
+	C:/Qt/6.10.1/mingw_64/include/QtWidgets/qlabel.h \
+	C:/Qt/6.10.1/mingw_64/include/QtWidgets/qpushbutton.h \
+	C:/Qt/6.10.1/mingw_64/include/QtWidgets/qscrollarea.h \
 	C:/Qt/6.10.1/mingw_64/include/QtWidgets/qsizepolicy.h \
 	C:/Qt/6.10.1/mingw_64/include/QtWidgets/qtwidgets-config.h \
 	C:/Qt/6.10.1/mingw_64/include/QtWidgets/qtwidgetsexports.h \
@@ -636,7 +650,6 @@ undaunted-phase1_autogen/timestamp: \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/CMakeFiles/3.30.5/CMakeRCCompiler.cmake \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/CMakeFiles/3.30.5/CMakeSystem.cmake \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6_10_1_MinGW_64_bit-Debug/undaunted-phase1_autogen/moc_predefs.h \
-	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/GameBoardWindow.ui \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/LoginPage.ui \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/MapSelectionWindow.ui \
 	D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/SplashScreen.ui \

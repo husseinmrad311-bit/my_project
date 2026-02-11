@@ -1,4 +1,5 @@
 #include "LoginPage.h"
+#include "Game.h"
 #include "ui_LoginPage.h"
 #include <QPixmap>
 #include <QDebug>
@@ -121,7 +122,6 @@ void LoginPage::onSelectMapButtonClicked()
     const QString p1 = ui->player1LineEdit->text().trimmed();
     const QString p2 = ui->player2LineEdit->text().trimmed();
 
-    //keep your validation exactly as you already have it
     QStringList errorMessages;
 
     QString err1;
@@ -132,46 +132,56 @@ void LoginPage::onSelectMapButtonClicked()
     if (!validatePlayerName(p2, err2))
         errorMessages << tr("Player 2: %1").arg(err2);
 
-    if (!errorMessages.isEmpty()){
-        QMessageBox::warning(this, tr("Invalid Player Name(s)"),errorMessages.join("\n"));
+    if (!errorMessages.isEmpty()) {
+        QMessageBox::warning(this,
+                             tr("Invalid Player Name(s)"),
+                             errorMessages.join("\n"));
         return;
     }
-    //So you might get: Player 1: Name must be at least 8 character or Player 2: Name must contain at least one special character or .....
 
-    //maps folder in the same directory as the executable
-    const QString mapsFolder = QDir(QCoreApplication::applicationDirPath()).filePath("maps");
+    // Maps folder next to executable
+    const QString mapsFolder =
+        QDir(QCoreApplication::applicationDirPath()).filePath("maps");
 
-    //open MapSelectionWindow
-    auto *mapWin = new MapSelectionWindow();//
-    mapWin->setAttribute(Qt::WA_DeleteOnClose, true);//WA_DeleteOnClose means when the window closes, Qt deletes it automatically (prevents memory leaks)
+    MapSelectionWindow* mapWin = new MapSelectionWindow();
+    mapWin->setAttribute(Qt::WA_DeleteOnClose, true);
     mapWin->setMapsFolder(mapsFolder);
     mapWin->show();
 
-    //if user selects a map then open GameBoard
-    QObject::connect(mapWin, &MapSelectionWindow::mapChosen, this,
-                     [this, p1, p2](const QString &mapPath)
-                     {
-                         QString error;
-                         auto *game = new GameBoardWindow();
-                         game->setAttribute(Qt::WA_DeleteOnClose, true);
+    // ✅ SINGLE connection only
+    connect(mapWin, &MapSelectionWindow::mapChosen, this,
+            [this, p1, p2](const QString& mapPath)
+            {
+                // 1️⃣ Create Game engine
+                Game* game = new Game(
+                    p1.toStdString(),
+                    p2.toStdString()
+                    );
 
-                         //put player names into labels
-                         game->setPlayerNames(p1, p2);
+                // 2️⃣ Load map INTO GAME
+                if (!game->loadMap(mapPath.toStdString())) {
+                    QMessageBox::warning(this,
+                                         "Map Load Failed",
+                                         "Failed to load map.");
+                    delete game;
+                    return;
+                }
 
-                         //load + render map
-                         if (!game->loadAndShowMap(mapPath, error)) {
-                             QMessageBox::warning(this, "Map load failed", error);
-                             delete game;
-                             return;
-                         }
+                // 3️⃣ Start game
+                game->startGame();
 
-                         game->show();
-                         this->hide(); //hide login after launching the gameboard
-                     });
+                // 4️⃣ Create Game Board UI
+                GameBoardWindow* board = new GameBoardWindow();
+                board->setAttribute(Qt::WA_DeleteOnClose, true);
 
-    //if canceled then do nothing
-    QObject::connect(mapWin, &MapSelectionWindow::canceled, this, []() {
-        //user canceled
+                // 5️⃣ Inject Game into UI
+                board->setGame(game);
+
+                board->show();
+                this->hide();
+            });
+
+    connect(mapWin, &MapSelectionWindow::canceled, this, []() {
+        // user canceled — do nothing
     });
 }
-

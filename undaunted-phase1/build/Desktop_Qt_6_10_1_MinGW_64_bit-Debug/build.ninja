@@ -272,7 +272,7 @@ build undaunted-phase1_autogen_timestamp_deps: phony
 #############################################
 # Utility command for undaunted-phase1_autogen
 
-build undaunted-phase1_autogen: phony CMakeFiles/undaunted-phase1_autogen undaunted-phase1_autogen/include/ui_SplashScreen.h undaunted-phase1_autogen/include/ui_LoginPage.h undaunted-phase1_autogen/include/ui_MapSelectionWindow.h undaunted-phase1_autogen/include/ui_GameBoardWindow.h undaunted-phase1_autogen/timestamp undaunted-phase1_autogen/mocs_compilation.cpp undaunted-phase1_autogen_timestamp_deps
+build undaunted-phase1_autogen: phony CMakeFiles/undaunted-phase1_autogen undaunted-phase1_autogen/include/ui_SplashScreen.h undaunted-phase1_autogen/include/ui_LoginPage.h undaunted-phase1_autogen/include/ui_MapSelectionWindow.h undaunted-phase1_autogen/timestamp undaunted-phase1_autogen/mocs_compilation.cpp undaunted-phase1_autogen_timestamp_deps
 
 
 #############################################
@@ -289,7 +289,7 @@ build undaunted-phase1_autogen/timestamp undaunted-phase1_autogen/mocs_compilati
 #############################################
 # Phony custom command for CMakeFiles\undaunted-phase1_autogen
 
-build CMakeFiles/undaunted-phase1_autogen undaunted-phase1_autogen/include/ui_SplashScreen.h undaunted-phase1_autogen/include/ui_LoginPage.h undaunted-phase1_autogen/include/ui_MapSelectionWindow.h undaunted-phase1_autogen/include/ui_GameBoardWindow.h | ${cmake_ninja_workdir}CMakeFiles/undaunted-phase1_autogen ${cmake_ninja_workdir}undaunted-phase1_autogen/include/ui_SplashScreen.h ${cmake_ninja_workdir}undaunted-phase1_autogen/include/ui_LoginPage.h ${cmake_ninja_workdir}undaunted-phase1_autogen/include/ui_MapSelectionWindow.h ${cmake_ninja_workdir}undaunted-phase1_autogen/include/ui_GameBoardWindow.h: phony undaunted-phase1_autogen/timestamp || undaunted-phase1_autogen_timestamp_deps
+build CMakeFiles/undaunted-phase1_autogen undaunted-phase1_autogen/include/ui_SplashScreen.h undaunted-phase1_autogen/include/ui_LoginPage.h undaunted-phase1_autogen/include/ui_MapSelectionWindow.h | ${cmake_ninja_workdir}CMakeFiles/undaunted-phase1_autogen ${cmake_ninja_workdir}undaunted-phase1_autogen/include/ui_SplashScreen.h ${cmake_ninja_workdir}undaunted-phase1_autogen/include/ui_LoginPage.h ${cmake_ninja_workdir}undaunted-phase1_autogen/include/ui_MapSelectionWindow.h: phony undaunted-phase1_autogen/timestamp || undaunted-phase1_autogen_timestamp_deps
 
 # =============================================================================
 # Target aliases.

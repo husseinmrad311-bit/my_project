@@ -19,7 +19,7 @@ qt_add_executable(undaunted-phase1
     Board.h
     MapLoader.h
     MapLoader.cpp
-    GameBoardWindow.h GameBoardWindow.cpp GameBoardWindow.ui
+    GameBoardWindow.h GameBoardWindow.cpp
     Board.cpp
     Game.h
     Player.h

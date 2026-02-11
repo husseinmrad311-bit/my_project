@@ -12,7 +12,6 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGraphicsView>
-#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -24,11 +23,14 @@ class Ui_GameBoardWindow
 public:
     QWidget *layoutWidget;
     QVBoxLayout *verticalLayout;
-    QHBoxLayout *horizontalLayout;
-    QLabel *player1Label;
-    QLabel *mapLabel;
-    QLabel *player2Label;
+    QWidget *topStatusBar;
+    QLabel *label;
+    QLabel *label_2;
+    QLabel *label_3;
+    QWidget *feedbackBar;
+    QWidget *actionBar;
     QGraphicsView *boardView;
+    QWidget *footerBar;
 
     void setupUi(QWidget *GameBoardWindow)
     {
@@ -46,34 +48,41 @@ public:
         verticalLayout = new QVBoxLayout(layoutWidget);
         verticalLayout->setObjectName("verticalLayout");
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setObjectName("horizontalLayout");
-        horizontalLayout->setSizeConstraint(QLayout::SizeConstraint::SetMinimumSize);
-        player1Label = new QLabel(layoutWidget);
-        player1Label->setObjectName("player1Label");
-        player1Label->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        topStatusBar = new QWidget(layoutWidget);
+        topStatusBar->setObjectName("topStatusBar");
+        label = new QLabel(topStatusBar);
+        label->setObjectName("label");
+        label->setGeometry(QRect(40, 0, 111, 20));
+        label_2 = new QLabel(topStatusBar);
+        label_2->setObjectName("label_2");
+        label_2->setGeometry(QRect(120, 0, 161, 20));
+        label_3 = new QLabel(topStatusBar);
+        label_3->setObjectName("label_3");
+        label_3->setGeometry(QRect(310, 0, 161, 20));
 
-        horizontalLayout->addWidget(player1Label);
+        verticalLayout->addWidget(topStatusBar);
 
-        mapLabel = new QLabel(layoutWidget);
-        mapLabel->setObjectName("mapLabel");
-        mapLabel->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        feedbackBar = new QWidget(layoutWidget);
+        feedbackBar->setObjectName("feedbackBar");
 
-        horizontalLayout->addWidget(mapLabel);
+        verticalLayout->addWidget(feedbackBar);
 
-        player2Label = new QLabel(layoutWidget);
-        player2Label->setObjectName("player2Label");
-        player2Label->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        actionBar = new QWidget(layoutWidget);
+        actionBar->setObjectName("actionBar");
 
-        horizontalLayout->addWidget(player2Label);
-
-
-        verticalLayout->addLayout(horizontalLayout);
+        verticalLayout->addWidget(actionBar);
 
         boardView = new QGraphicsView(layoutWidget);
         boardView->setObjectName("boardView");
+        sizePolicy.setHeightForWidth(boardView->sizePolicy().hasHeightForWidth());
+        boardView->setSizePolicy(sizePolicy);
 
         verticalLayout->addWidget(boardView);
+
+        footerBar = new QWidget(layoutWidget);
+        footerBar->setObjectName("footerBar");
+
+        verticalLayout->addWidget(footerBar);
 
 
         retranslateUi(GameBoardWindow);
@@ -84,9 +93,9 @@ public:
     void retranslateUi(QWidget *GameBoardWindow)
     {
         GameBoardWindow->setWindowTitle(QCoreApplication::translate("GameBoardWindow", "Form", nullptr));
-        player1Label->setText(QCoreApplication::translate("GameBoardWindow", "Player1", nullptr));
-        mapLabel->setText(QCoreApplication::translate("GameBoardWindow", "Map", nullptr));
-        player2Label->setText(QCoreApplication::translate("GameBoardWindow", "Player2", nullptr));
+        label->setText(QCoreApplication::translate("GameBoardWindow", "turnLabel", nullptr));
+        label_2->setText(QCoreApplication::translate("GameBoardWindow", "currentPlayerLabel", nullptr));
+        label_3->setText(QCoreApplication::translate("GameBoardWindow", "currentCardLabel", nullptr));
     } // retranslateUi
 
 };

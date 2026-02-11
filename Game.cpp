@@ -38,6 +38,7 @@ Game::Game(const std::string& name1,const std::string& name2)
         drawCard();
         displayTurnInfo();
         displayGameState();
+        placeInitialAgents();
     }
 
     bool Game::drawCard() {
@@ -302,4 +303,39 @@ Game::Game(const std::string& name1,const std::string& name2)
     const Board& Game::getBoard() const
     {
         return board;
+    }
+
+    void Game::placeInitialAgents()
+    {
+        if (board.rows == 0 || board.cols == 0)
+            return;
+
+        Side sideA = Side::A;
+        Side sideB = Side::B;
+
+        Cell* aScout = &board.grid[0][0];
+        Cell* aSniper = &board.grid[0][1];
+        Cell* aSergeant = &board.grid[0][2];
+
+        aScout->setAgent(AgentType::Scout, sideA);
+        aSniper->setAgent(AgentType::Sniper, sideA);
+        aSergeant->setAgent(AgentType::Seargeant, sideA);
+
+        players[0]->getAgentPiece(AgentType::Scout)->setPosition(aScout);
+        players[0]->getAgentPiece(AgentType::Sniper)->setPosition(aSniper);
+        players[0]->getAgentPiece(AgentType::Seargeant)->setPosition(aSergeant);
+
+        int lastRow = board.rows - 1;
+
+        Cell* bScout = &board.grid[lastRow][0];
+        Cell* bSniper = &board.grid[lastRow][1];
+        Cell* bSergeant = &board.grid[lastRow][2];
+
+        bScout->setAgent(AgentType::Scout, sideB);
+        bSniper->setAgent(AgentType::Sniper, sideB);
+        bSergeant->setAgent(AgentType::Seargeant, sideB);
+
+        players[1]->getAgentPiece(AgentType::Scout)->setPosition(bScout);
+        players[1]->getAgentPiece(AgentType::Sniper)->setPosition(bSniper);
+        players[1]->getAgentPiece(AgentType::Seargeant)->setPosition(bSergeant);
     }

@@ -11,6 +11,7 @@ class Game {
 public:
     Game(const std::string& name1,const std::string& name2);
     bool loadMap(const std::string& path);
+
     // Core state
     Board board;
     std::vector<std::unique_ptr<Player>> players;
@@ -53,11 +54,11 @@ private:
 
     void initializePlayers();
     void initializeBoard();
+    void placeInitialAgents();   // ✅ NEW
 
     bool isActionAllowed(AgentType agentType,
                          const std::string& actionType);
 
-    // 🔑 MUST MATCH Game.cpp EXACTLY
     void checkWinConditions();
     int countControlledHouses(Player* player) const;
 };

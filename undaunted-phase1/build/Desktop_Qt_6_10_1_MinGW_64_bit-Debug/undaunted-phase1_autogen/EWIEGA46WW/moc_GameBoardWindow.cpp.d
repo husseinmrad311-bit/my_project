@@ -144,6 +144,7 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtCore/qversiontagging.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qxptype_traits.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qyieldcpu.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/QColor \
   C:/Qt/6.10.1/mingw_64/include/QtGui/QResizeEvent \
   C:/Qt/6.10.1/mingw_64/include/QtGui/QTransform \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qaction.h \
@@ -166,6 +167,7 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtGui/qkeysequence.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpaintdevice.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpainter.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qpainterpath.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpalette.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpen.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpicture.h \
@@ -188,6 +190,7 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtGui/qvectornd.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qwindowdefs.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qwindowdefs_win.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsObject \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsScene \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsView \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/QLabel \
@@ -196,6 +199,7 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qabstractbutton.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qabstractscrollarea.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qframe.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicsitem.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicsscene.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicsview.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qlabel.h \
@@ -436,6 +440,7 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Board.h \
   D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Card.h \
   D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Cell.h \
+  D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/CellItem.h \
   D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Game.h \
   D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Player.h \
   D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/Unit.h

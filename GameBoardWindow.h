@@ -7,7 +7,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QResizeEvent>
-
+#include "CellItem.h"
 #include "Game.h"
 
 class GameBoardWindow : public QWidget
@@ -31,7 +31,7 @@ private:
     void fitBoardToView();
     void handleAction(const std::string& action);
 
-private:
+
     Game* m_game = nullptr;
     QGraphicsScene* m_scene = nullptr;
 
@@ -51,6 +51,10 @@ private:
 
     // ===== Board =====
     QGraphicsView* boardView = nullptr;
+    QString m_selectedTile;
+    CellItem* m_selectedItem = nullptr;
+private slots:
+    void onCellClicked(const QString& tileId);
 };
 
 #endif

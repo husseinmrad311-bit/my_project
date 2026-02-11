@@ -1,25 +1,38 @@
 #ifndef CELLITEM_H
 #define CELLITEM_H
 
-#pragma once
-
-#include <QGraphicsItem>
+#include <QGraphicsObject>
 #include <QString>
+#include <QColor>
+#include "Cell.h"
 
-class CellItem : public QGraphicsItem
+class CellItem : public QGraphicsObject
 {
+    Q_OBJECT
+
 public:
-    explicit CellItem(const QString& tileId,
-                      int size = 60);
+    explicit CellItem(const Cell& cell,
+                      int size = 60,
+                      QGraphicsItem* parent = nullptr);
 
     QRectF boundingRect() const override;
     void paint(QPainter* painter,
                const QStyleOptionGraphicsItem* option,
                QWidget* widget = nullptr) override;
 
+    QString getTileId() const;
+    void setSelected(bool selected);
+
+signals:
+    void cellClicked(const QString& tileId);
+
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+
 private:
-    QString m_tileId;
-    int     m_size;
+    Cell m_cell;      // FULL CELL COPY (safe)
+    int  m_size;
+    bool m_selected = false;
 };
 
-#endif // CELLITEM_H
+#endif

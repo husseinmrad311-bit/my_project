@@ -6,6 +6,7 @@
 #include <QPen>
 #include <QBrush>
 #include <QPainter>
+#include "Cell.h"
 
 // ============================================
 // Constructor
@@ -118,7 +119,14 @@ void GameBoardWindow::handleAction(const std::string& action)
 {
     if (!m_game) return;
 
-    bool success = m_game->performAction(action, "");
+    if (m_selectedTile.isEmpty())
+    {
+        feedbackLabel->setText("Select a tile first!");
+        return;
+    }
+
+    bool success = m_game->performAction(action,
+                                         m_selectedTile.toStdString());
 
     feedbackLabel->setText(success ?
                                "Action Successful" :
@@ -175,66 +183,71 @@ void GameBoardWindow::refreshHUD()
 // ============================================
 // Render Board From Engine
 // ============================================
+
 void GameBoardWindow::renderBoardFromGame()
 {
     if (!m_game) return;
 
     m_scene->clear();
 
-    const Board& board = m_game->getBoard();
+    const Board& board = m_game->board;
+
+    const int rows = board.rows;
+    const int cols = board.cols;
 
     const int cellSize = 60;
     const int gap = 8;
 
-    for (int r = 0; r < board.rows; ++r)
+    // -------- COUNT REAL TILES PER ROW --------
+    QVector<int> rowTileCounts(rows, 0);
+    int maxTilesInAnyRow = 0;
+
+    for (int r = 0; r < rows; ++r)
     {
-        for (int c = 0; c < board.cols; ++c)
+        int count = 0;
+        for (int c = 0; c < cols; ++c)
+        {
+            const Cell& cell = board.grid[r][c];
+            if (cell.type != -1 && !cell.tileId.isEmpty())
+                count++;
+        }
+
+        rowTileCounts[r] = count;
+        maxTilesInAnyRow = std::max(maxTilesInAnyRow, count);
+    }
+
+    // -------- DRAW ROWS CENTERED --------
+    for (int r = 0; r < rows; ++r)
+    {
+        int tilesThisRow = rowTileCounts[r];
+        qreal rowOffset = (maxTilesInAnyRow - tilesThisRow) / 2.0;
+
+        int tileIndex = 0;
+
+        for (int c = 0; c < cols; ++c)
         {
             const Cell& cell = board.grid[r][c];
 
             if (cell.type == -1 || cell.tileId.isEmpty())
                 continue;
 
-            qreal x = c * (cellSize + gap);
+            qreal x = (rowOffset + tileIndex) * (cellSize + gap);
             qreal y = r * (cellSize + gap);
 
-            QRectF rect(x, y, cellSize, cellSize);
+            // ✅ USE NEW CELLITEM (FULL CELL PASSED)
+            CellItem* item = new CellItem(cell, cellSize);
 
-            QColor baseColor;
+            item->setPos(x, y);
 
-            switch (cell.type)
-            {
-            case 0: baseColor = QColor(220,220,220); break;
-            case 1: baseColor = QColor(80,170,80); break;
-            case 2: baseColor = QColor(80,120,200); break;
-            default: baseColor = Qt::gray;
-            }
+            connect(item, &CellItem::cellClicked,
+                    this, &GameBoardWindow::onCellClicked);
 
-            m_scene->addRect(rect, QPen(Qt::black), QBrush(baseColor));
+            m_scene->addItem(item);
 
-            // Draw agent if exists
-            if (cell.agent != AgentType::None)
-            {
-                QColor pieceColor =
-                    (cell.agentSide == Side::A)
-                        ? Qt::red
-                        : Qt::blue;
-
-                QRectF inner = rect.adjusted(15,15,-15,-15);
-                m_scene->addEllipse(inner,
-                                    QPen(Qt::black),
-                                    QBrush(pieceColor));
-            }
-
-            // Tile label
-            auto textItem = m_scene->addText(cell.tileId);
-            QRectF tb = textItem->boundingRect();
-            textItem->setPos(
-                rect.center().x() - tb.width()/2,
-                rect.center().y() - tb.height()/2
-                );
+            tileIndex++;
         }
     }
+
 }
 
 // ============================================
@@ -261,4 +274,26 @@ void GameBoardWindow::resizeEvent(QResizeEvent *event)
 {
     QWidget::resizeEvent(event);
     fitBoardToView();
+}
+void GameBoardWindow::onCellClicked(const QString& tileId)
+{
+    m_selectedTile = tileId;
+
+    // Clear previous selection
+    if (m_selectedItem)
+        m_selectedItem->setSelected(false);
+
+    // Find clicked item
+    for (QGraphicsItem* item : m_scene->items())
+    {
+        CellItem* cell = dynamic_cast<CellItem*>(item);
+        if (cell && cell->getTileId() == tileId)
+        {
+            m_selectedItem = cell;
+            m_selectedItem->setSelected(true);
+            break;
+        }
+    }
+
+    feedbackLabel->setText("Selected: " + tileId);
 }

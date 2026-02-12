@@ -68,6 +68,44 @@ void GameBoardWindow::buildUI()
     boardView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     boardView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+    // ===== Legend Panel =====
+    QLabel* legendLabel = new QLabel();
+    legendLabel->setMinimumWidth(260);
+    legendLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+
+    // 🔥 BLACK THEME
+    legendLabel->setStyleSheet(
+        "background-color: #111111;"
+        "color: white;"
+        "padding: 15px;"
+        "font-size: 12px;"
+        );
+
+    legendLabel->setText(
+        "<b style='color:white;'>LEGEND</b><br><br>"
+
+        "<b style='color:white;'>Units:</b><br>"
+        "<span style='color:red;'>S</span> = Scout A<br>"
+        "<span style='color:blue;'>S</span> = Scout B<br>"
+        "<span style='color:red;'>N</span> = Sniper A<br>"
+        "<span style='color:blue;'>N</span> = Sniper B<br>"
+        "<span style='color:red;'>G</span> = Sergeant A<br>"
+        "<span style='color:blue;'>G</span> = Sergeant B<br><br>"
+
+        "<b style='color:white;'>Control:</b><br>"
+        "Thick <span style='color:red;'>Red</span> Border = Player A<br>"
+        "Thick <span style='color:blue;'>Blue</span> Border = Player B<br><br>"
+
+        "<b style='color:white;'>Mark:</b><br>"
+        "<span style='color:#00ff00;'>Green Dashed</span> = Marked by A<br>"
+        "<span style='color:cyan;'>Cyan Dashed</span> = Marked by B"
+        );
+
+    // ===== Center Layout (Board + Legend) =====
+    QHBoxLayout* centerLayout = new QHBoxLayout();
+    centerLayout->addWidget(boardView, 3);
+    centerLayout->addWidget(legendLabel, 1);
+
     // ===== Footer =====
     QHBoxLayout* footerBar = new QHBoxLayout();
     deckInfoLabel = new QLabel("-");
@@ -79,7 +117,7 @@ void GameBoardWindow::buildUI()
     mainLayout->addLayout(topBar);
     mainLayout->addLayout(feedbackBar);
     mainLayout->addLayout(actionBar);
-    mainLayout->addWidget(boardView, 1);
+    mainLayout->addLayout(centerLayout, 1);
     mainLayout->addLayout(footerBar);
 
     // ===== Connections =====
@@ -186,7 +224,8 @@ void GameBoardWindow::refreshHUD()
 
 void GameBoardWindow::renderBoardFromGame()
 {
-    if (!m_game) return;
+    if (!m_game)
+        return;
 
     m_scene->clear();
 
@@ -198,29 +237,36 @@ void GameBoardWindow::renderBoardFromGame()
     const int cellSize = 60;
     const int gap = 8;
 
-    // -------- COUNT REAL TILES PER ROW --------
     QVector<int> rowTileCounts(rows, 0);
     int maxTilesInAnyRow = 0;
 
+    // -------- Count valid tiles per row --------
     for (int r = 0; r < rows; ++r)
     {
-        int count = 0;
+        int validCount = 0;
+
         for (int c = 0; c < cols; ++c)
         {
             const Cell& cell = board.grid[r][c];
+
             if (cell.type != -1 && !cell.tileId.isEmpty())
-                count++;
+                validCount++;
         }
 
-        rowTileCounts[r] = count;
-        maxTilesInAnyRow = std::max(maxTilesInAnyRow, count);
+        rowTileCounts[r] = validCount;
+        maxTilesInAnyRow = std::max(maxTilesInAnyRow, validCount);
     }
 
-    // -------- DRAW ROWS CENTERED --------
+    // -------- Draw centered rows --------
     for (int r = 0; r < rows; ++r)
     {
-        int tilesThisRow = rowTileCounts[r];
-        qreal rowOffset = (maxTilesInAnyRow - tilesThisRow) / 2.0;
+        const int tilesInRow = rowTileCounts[r];
+
+        if (tilesInRow == 0)
+            continue;
+
+        const qreal horizontalOffset =
+            (maxTilesInAnyRow - tilesInRow) / 2.0;
 
         int tileIndex = 0;
 
@@ -231,23 +277,26 @@ void GameBoardWindow::renderBoardFromGame()
             if (cell.type == -1 || cell.tileId.isEmpty())
                 continue;
 
-            qreal x = (rowOffset + tileIndex) * (cellSize + gap);
-            qreal y = r * (cellSize + gap);
+            const qreal x =
+                (horizontalOffset + tileIndex) * (cellSize + gap);
 
-            // ✅ USE NEW CELLITEM (FULL CELL PASSED)
+            const qreal y =
+                r * (cellSize + gap);
+
             CellItem* item = new CellItem(cell, cellSize);
 
             item->setPos(x, y);
 
-            connect(item, &CellItem::cellClicked,
-                    this, &GameBoardWindow::onCellClicked);
+            connect(item,
+                    &CellItem::cellClicked,
+                    this,
+                    &GameBoardWindow::onCellClicked);
 
             m_scene->addItem(item);
 
             tileIndex++;
         }
     }
-
 }
 
 // ============================================

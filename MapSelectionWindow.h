@@ -11,8 +11,8 @@ QT_END_NAMESPACE
 
 struct MapItem
 {
-    QString filePath;     //absolute path to mapX.txt
-    QString displayName;  //shown in the list (e.g. map1)
+    QString filePath;
+    QString displayName;
 };
 
 class MapSelectionWindow : public QWidget
@@ -23,18 +23,17 @@ public:
     explicit MapSelectionWindow(QWidget *parent = nullptr);
     ~MapSelectionWindow();
 
-    //call this right after creating the window
     void setMapsFolder(const QString &folderPath);
+    void setStatesFolder(const QString &folderPath);   // NEW
 
 signals:
-    //emitted when user chooses a map successfully
-    void mapChosen(const QString &mapFilePath);
+    // UPDATED SIGNAL (map + state)
+    void mapChosen(const QString &mapFilePath,
+                   const QString &stateFilePath);
 
-    //emitted when user cancels/back
     void canceled();
 
 protected:
-    //for background stretching if you use backgroundLabel
     void resizeEvent(QResizeEvent *event) override;
 
 private slots:
@@ -45,13 +44,16 @@ private:
     Ui::MapSelectionWindow *ui;
 
     QString m_mapsFolder;
+    QString m_stateFolder;          // NEW
+
     QVector<MapItem> m_maps;
+    QVector<MapItem> m_states;      // NEW
 
-    //optional background scaling (only if you set a background image)
     QPixmap m_bgPixmap;
-    void updateBackground();
 
+    void updateBackground();
     void loadMaps();
+    void loadStates();              // NEW
 };
 
 #endif

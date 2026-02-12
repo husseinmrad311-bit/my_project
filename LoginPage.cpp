@@ -119,6 +119,7 @@ bool LoginPage::validatePlayerName(const QString &name,
 
 void LoginPage::onSelectMapButtonClicked()
 {
+
     const QString p1 = ui->player1LineEdit->text().trimmed();
     const QString p2 = ui->player2LineEdit->text().trimmed();
 
@@ -147,10 +148,11 @@ void LoginPage::onSelectMapButtonClicked()
     mapWin->setAttribute(Qt::WA_DeleteOnClose, true);
     mapWin->setMapsFolder(mapsFolder);
     mapWin->show();
-
+ qDebug() << "Maps folder path:" << mapsFolder;
     // ✅ SINGLE connection only
     connect(mapWin, &MapSelectionWindow::mapChosen, this,
-            [this, p1, p2](const QString& mapPath)
+            [this, p1, p2](const QString& mapPath,
+                           const QString& statePath)
             {
                 // 1️⃣ Create Game engine
                 Game* game = new Game(
@@ -167,21 +169,26 @@ void LoginPage::onSelectMapButtonClicked()
                     return;
                 }
 
-                // 3️⃣ Start game
+                // 3️⃣ Load state file
+                if (!game->loadStateFile(statePath.toStdString())) {
+                    QMessageBox::warning(this,
+                                         "State Load Failed",
+                                         "Failed to load state file.");
+                    delete game;
+                    return;
+                }
+
+                // 4️⃣ Start game
                 game->startGame();
 
-                // 4️⃣ Create Game Board UI
+                // 5️⃣ Create Game Board UI
                 GameBoardWindow* board = new GameBoardWindow();
                 board->setAttribute(Qt::WA_DeleteOnClose, true);
 
-                // 5️⃣ Inject Game into UI
+                // 6️⃣ Inject Game into UI
                 board->setGame(game);
 
                 board->show();
                 this->hide();
             });
-
-    connect(mapWin, &MapSelectionWindow::canceled, this, []() {
-        // user canceled — do nothing
-    });
 }

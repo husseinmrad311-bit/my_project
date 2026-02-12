@@ -1,9 +1,3 @@
-/*
-Shows a list of available map files (*.txt) from maps folder.
-Lets the user select one and click Select → emits a signal mapChosen(mapPath).
-Or click Cancel → emits canceled().
-Also shows a background image that resizes smoothly when the window size changes
-*/
 #include "MapSelectionWindow.h"
 #include "ui_MapSelectionWindow.h"
 
@@ -11,7 +5,8 @@ Also shows a background image that resizes smoothly when the window size changes
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QResizeEvent>
-#include <QPixmap>  //include for handling images
+#include <QPixmap>
+#include <QDebug>
 
 MapSelectionWindow::MapSelectionWindow(QWidget *parent)
     : QWidget(parent),
@@ -20,99 +15,191 @@ MapSelectionWindow::MapSelectionWindow(QWidget *parent)
     ui->setupUi(this);
     setWindowTitle("Select Map");
 
-    //load the background image using QPixmap
     m_bgPixmap = QPixmap("D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/images/Map_selection.jpg");
 
     if (m_bgPixmap.isNull()) {
         qDebug() << "ERROR: background image not found!";
     }
 
-    // UI WIDGETS expected in MapSelectionWindow.ui:
-    // - QListWidget mapListWidget
-    // - QPushButton selectButton
-    // - QPushButton cancelButton
-    // - QLabel backgroundLabel (optional, for stretched background)
-
     connect(ui->selectButton, &QPushButton::clicked,
             this, &MapSelectionWindow::onSelectClicked);
 
     connect(ui->cancelButton, &QPushButton::clicked,
             this, &MapSelectionWindow::onCancelClicked);
-    /*
-Select button -> run onSelectClicked()
-Cancel button -> run onCancelClicked()
-*/
 }
 
-MapSelectionWindow::~MapSelectionWindow()//destructor
+MapSelectionWindow::~MapSelectionWindow()
 {
     delete ui;
 }
 
-void MapSelectionWindow::setMapsFolder(const QString &folderPath)//this function is important because it’s how LoginPage tells MapSelectionWindow where maps exist
+void MapSelectionWindow::setMapsFolder(const QString &folderPath)
 {
     m_mapsFolder = folderPath;
-
-    //debug print to check the folder path
-    qDebug() << "Maps folder path: " << m_mapsFolder;
-
+    qDebug() << "Maps folder path:" << m_mapsFolder;
     loadMaps();
-
 }
 
+void MapSelectionWindow::setStatesFolder(const QString &folderPath)
+{
+    m_stateFolder = folderPath;
+    qDebug() << "States folder path:" << m_stateFolder;
+    loadStates();
+}
 
 void MapSelectionWindow::loadMaps()
 {
     ui->mapListWidget->clear();
+    ui->stateListWidget->clear();
+
     m_maps.clear();
 
-    QDir dir(m_mapsFolder);
-    if (!dir.exists()) {
-        QMessageBox::warning(this, "Maps Missing","Maps folder not found:\n" + m_mapsFolder);//if the folder doesn’t exist -> show warning and stop
+    QDir mapsDir(m_mapsFolder);
+
+    if (!mapsDir.exists()) {
+        QMessageBox::warning(this,
+                             "Maps Missing",
+                             "Maps folder not found:\n" + m_mapsFolder);
         return;
     }
 
-    //loads map1.txt, map2.txt ... and ANY other .txt (dynamic)
-    QStringList files = dir.entryList(QStringList() << "*.txt", QDir::Files, QDir::Name);
+    // -----------------------------
+    // Load MAP files
+    // -----------------------------
+    QStringList mapFiles =
+        mapsDir.entryList(QStringList() << "*.txt",
+                          QDir::Files,
+                          QDir::Name);
 
-    if (files.isEmpty()) {
-        QMessageBox::warning(this, "No Maps","No .txt map files found in:\n" + m_mapsFolder);
-        return;
-    }
-
-    for (const QString &file : files) {
-        const QString fullPath = dir.absoluteFilePath(file);
+    for (const QString &file : mapFiles)
+    {
+        const QString fullPath =
+            mapsDir.absoluteFilePath(file);
 
         MapItem item;
         item.filePath = fullPath;
-        item.displayName = QFileInfo(file).baseName(); //map1, map2, ...
+        item.displayName = QFileInfo(file).baseName();
 
         m_maps.push_back(item);
 
-        //show in list
-        QListWidgetItem *w = new QListWidgetItem(item.displayName);
+        QListWidgetItem *w =
+            new QListWidgetItem(item.displayName);
+
         w->setData(Qt::UserRole, item.filePath);
         ui->mapListWidget->addItem(w);
     }
 
-    ui->mapListWidget->setCurrentRow(0);
+    // -----------------------------
+    // Load STATE files (beside maps)
+    // -----------------------------
+
+    // Go up from .../maps → .../Debug
+    QDir parentDir = mapsDir;
+    parentDir.cdUp();
+
+    // Now look for .../Debug/states
+    QDir statesDir(parentDir.filePath("states"));
+
+    qDebug() << "States folder path:" << statesDir.absolutePath();
+    qDebug() << "States exists:" << statesDir.exists();
+
+    if (statesDir.exists())
+    {
+        QStringList stateFiles =
+            statesDir.entryList(QStringList() << "*.txt",
+                                QDir::Files,
+                                QDir::Name);
+
+        for (const QString &file : stateFiles)
+        {
+            QListWidgetItem *w =
+                new QListWidgetItem(QFileInfo(file).baseName());
+
+            w->setData(Qt::UserRole,
+                       statesDir.absoluteFilePath(file));
+
+            ui->stateListWidget->addItem(w);
+        }
+    }
+    else
+    {
+        qDebug() << "States folder not found.";
+    }
+
+    // -----------------------------
+    // Default selections
+    // -----------------------------
+    if (ui->mapListWidget->count() > 0)
+        ui->mapListWidget->setCurrentRow(0);
+
+    if (ui->stateListWidget->count() > 0)
+        ui->stateListWidget->setCurrentRow(0);
+
+}
+void MapSelectionWindow::loadStates()
+{
+    ui->stateListWidget->clear();
+    m_states.clear();
+
+    QDir dir(m_stateFolder);
+    if (!dir.exists()) {
+        QMessageBox::warning(this,
+                             "States Missing",
+                             "States folder not found:\n" + m_stateFolder);
+        return;
+    }
+
+    QStringList files = dir.entryList(QStringList() << "*.txt",
+                                      QDir::Files,
+                                      QDir::Name);
+
+    if (files.isEmpty()) {
+        QMessageBox::warning(this,
+                             "No States",
+                             "No .txt state files found in:\n" + m_stateFolder);
+        return;
+    }
+
+    for (const QString &file : files) {
+        QString fullPath = dir.absoluteFilePath(file);
+
+        MapItem item;
+        item.filePath = fullPath;
+        item.displayName = QFileInfo(file).baseName();
+
+        m_states.push_back(item);
+
+        QListWidgetItem *w = new QListWidgetItem(item.displayName);
+        w->setData(Qt::UserRole, item.filePath);
+        ui->stateListWidget->addItem(w);
+    }
+
+    ui->stateListWidget->setCurrentRow(0);
 }
 
 void MapSelectionWindow::onSelectClicked()
 {
-    QListWidgetItem *current = ui->mapListWidget->currentItem();
-    if (!current) {
-        QMessageBox::warning(this, "No Selection", "Please select a map.");
+    QListWidgetItem *mapItem =
+        ui->mapListWidget->currentItem();
+
+    QListWidgetItem *stateItem =
+        ui->stateListWidget->currentItem();
+
+    if (!mapItem || !stateItem) {
+        QMessageBox::warning(this,
+                             "Selection Missing",
+                             "Please select both a map and a state file.");
         return;
     }
 
-    const QString selectedPath = current->data(Qt::UserRole).toString();
-    if (selectedPath.isEmpty()) {
-        QMessageBox::warning(this, "Error", "Invalid selected map.");
-        return;
-    }
+    QString mapPath =
+        mapItem->data(Qt::UserRole).toString();
 
-    emit mapChosen(selectedPath);
+    QString statePath =
+        stateItem->data(Qt::UserRole).toString();
+
+    emit mapChosen(mapPath, statePath);
+
     close();
 }
 
@@ -122,17 +209,19 @@ void MapSelectionWindow::onCancelClicked()
     close();
 }
 
-void MapSelectionWindow::resizeEvent(QResizeEvent *event){
+void MapSelectionWindow::resizeEvent(QResizeEvent *event)
+{
     QWidget::resizeEvent(event);
-    updateBackground();  //update background whenever window is resized
+    updateBackground();
 }
 
-void MapSelectionWindow::updateBackground(){
-    if (m_bgPixmap.isNull()) {
+void MapSelectionWindow::updateBackground()
+{
+    if (m_bgPixmap.isNull())
         return;
-    }
 
-    //if you didn't add backgroundLabel in UI, comment next line
     ui->backgroundLabel->setPixmap(
-        m_bgPixmap.scaled(ui->backgroundLabel->size(),Qt::IgnoreAspectRatio,Qt::SmoothTransformation));  //set image to fit label size
+        m_bgPixmap.scaled(ui->backgroundLabel->size(),
+                          Qt::IgnoreAspectRatio,
+                          Qt::SmoothTransformation));
 }

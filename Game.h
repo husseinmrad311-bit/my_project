@@ -49,12 +49,12 @@ public:
 
     void displayGameState() const;
     void displayTurnInfo() const;
-
+    bool loadStateFile(const std::string& path);
 private:
 
     void initializePlayers();
     void initializeBoard();
-    void placeInitialAgents();   // ✅ NEW
+    void synchronizeUnitsWithBoard();
 
     bool isActionAllowed(AgentType agentType,
                          const std::string& actionType);

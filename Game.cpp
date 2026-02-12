@@ -2,7 +2,9 @@
     #include "CombatSystem.h"
     #include "MapLoader.h"
     #include <iostream>
-
+    #include <QFile>
+    #include <QTextStream>
+    #include <QStringList>
 Game::Game(const std::string& name1,const std::string& name2)
 {
     players.push_back(std::make_unique<Player>(1));
@@ -35,10 +37,11 @@ Game::Game(const std::string& name1,const std::string& name2)
         std::cout << "=== GAME STARTED ===\n";
         std::cout << "Player 1 vs Player 2\n";
 
+        synchronizeUnitsWithBoard();
+
         drawCard();
         displayTurnInfo();
         displayGameState();
-        placeInitialAgents();
     }
 
     bool Game::drawCard() {
@@ -305,37 +308,120 @@ Game::Game(const std::string& name1,const std::string& name2)
         return board;
     }
 
-    void Game::placeInitialAgents()
+    void Game::synchronizeUnitsWithBoard()
     {
-        if (board.rows == 0 || board.cols == 0)
-            return;
+        for (int r = 0; r < board.rows; ++r)
+        {
+            for (int c = 0; c < board.cols; ++c)
+            {
+                Cell& cell = board.grid[r][c];
 
-        Side sideA = Side::A;
-        Side sideB = Side::B;
+                if (cell.agent == AgentType::None)
+                    continue;
 
-        Cell* aScout = &board.grid[0][0];
-        Cell* aSniper = &board.grid[0][1];
-        Cell* aSergeant = &board.grid[0][2];
+                Player* player =
+                    (cell.agentSide == Side::A)
+                        ? players[0].get()
+                        : players[1].get();
 
-        aScout->setAgent(AgentType::Scout, sideA);
-        aSniper->setAgent(AgentType::Sniper, sideA);
-        aSergeant->setAgent(AgentType::Seargeant, sideA);
+                Unit* unit = player->getAgentPiece(cell.agent);
 
-        players[0]->getAgentPiece(AgentType::Scout)->setPosition(aScout);
-        players[0]->getAgentPiece(AgentType::Sniper)->setPosition(aSniper);
-        players[0]->getAgentPiece(AgentType::Seargeant)->setPosition(aSergeant);
+                if (unit)
+                    unit->setPosition(&cell);
+            }
+        }
+    }
 
-        int lastRow = board.rows - 1;
 
-        Cell* bScout = &board.grid[lastRow][0];
-        Cell* bSniper = &board.grid[lastRow][1];
-        Cell* bSergeant = &board.grid[lastRow][2];
 
-        bScout->setAgent(AgentType::Scout, sideB);
-        bSniper->setAgent(AgentType::Sniper, sideB);
-        bSergeant->setAgent(AgentType::Seargeant, sideB);
+    bool Game::loadStateFile(const std::string& path)
+    {
+        QFile file(QString::fromStdString(path));
 
-        players[1]->getAgentPiece(AgentType::Scout)->setPosition(bScout);
-        players[1]->getAgentPiece(AgentType::Sniper)->setPosition(bSniper);
-        players[1]->getAgentPiece(AgentType::Seargeant)->setPosition(bSergeant);
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+            return false;
+
+        QTextStream in(&file);
+
+        while (!in.atEnd())
+        {
+            QString line = in.readLine().trimmed();
+            if (line.isEmpty())
+                continue;
+
+            QStringList parts = line.split(':');
+            if (parts.size() != 2)
+                continue;
+
+            QString cellId = parts[0].trimmed().toUpper();
+            QStringList rhs = parts[1].split(',');
+            if (rhs.size() != 2)
+                continue;
+
+            Side side = Side::None;
+            if (rhs[0].trimmed() == "A") side = Side::A;
+            else if (rhs[0].trimmed() == "B") side = Side::B;
+
+            QString typeStr = rhs[1].trimmed();
+
+            for (int r = 0; r < board.rows; ++r)
+            {
+                for (int c = 0; c < board.cols; ++c)
+                {
+                    Cell& cell = board.grid[r][c];
+
+                    if (cell.tileId != cellId)
+                        continue;
+
+                    // -----------------------------
+                    // MARK
+                    // -----------------------------
+                    if (typeStr == "Mark")
+                    {
+                        cell.marked = true;
+                        cell.markedBy = side;
+                    }
+                    // -----------------------------
+                    // CONTROL
+                    // -----------------------------
+                    else if (typeStr == "Control")
+                    {
+                        cell.controlledBy = side;
+                    }
+                    // -----------------------------
+                    // AGENT + UNIT SYNC
+                    // -----------------------------
+                    else
+                    {
+                        AgentType agent = AgentType::None;
+
+                        if (typeStr == "Scout")
+                            agent = AgentType::Scout;
+                        else if (typeStr == "Sniper")
+                            agent = AgentType::Sniper;
+                        else if (typeStr == "Seargeant")
+                            agent = AgentType::Seargeant;
+
+                        if (agent != AgentType::None)
+                        {
+                            // Update board cell
+                            cell.agent = agent;
+                            cell.agentSide = side;
+
+                            // Synchronize Player unit position
+                            int playerIndex = (side == Side::A) ? 0 : 1;
+                            Player* player = players[playerIndex].get();
+
+                            Unit* unit = player->getAgentPiece(agent);
+                            if (unit)
+                            {
+                                unit->setPosition(&cell);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
     }

@@ -42,6 +42,7 @@ template <> constexpr inline auto MapSelectionWindow::qt_create_metaobjectdata<q
         "mapChosen",
         "",
         "mapFilePath",
+        "stateFilePath",
         "canceled",
         "onSelectClicked",
         "onCancelClicked"
@@ -49,15 +50,15 @@ template <> constexpr inline auto MapSelectionWindow::qt_create_metaobjectdata<q
 
     QtMocHelpers::UintData qt_methods {
         // Signal 'mapChosen'
-        QtMocHelpers::SignalData<void(const QString &)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 3 },
+        QtMocHelpers::SignalData<void(const QString &, const QString &)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 3 }, { QMetaType::QString, 4 },
         }}),
         // Signal 'canceled'
-        QtMocHelpers::SignalData<void()>(4, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::SignalData<void()>(5, 2, QMC::AccessPublic, QMetaType::Void),
         // Slot 'onSelectClicked'
-        QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'onCancelClicked'
         QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onCancelClicked'
+        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -81,7 +82,7 @@ void MapSelectionWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, i
     auto *_t = static_cast<MapSelectionWindow *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: _t->mapChosen((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 0: _t->mapChosen((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<QString>>(_a[2]))); break;
         case 1: _t->canceled(); break;
         case 2: _t->onSelectClicked(); break;
         case 3: _t->onCancelClicked(); break;
@@ -89,7 +90,7 @@ void MapSelectionWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, i
         }
     }
     if (_c == QMetaObject::IndexOfMethod) {
-        if (QtMocHelpers::indexOfMethod<void (MapSelectionWindow::*)(const QString & )>(_a, &MapSelectionWindow::mapChosen, 0))
+        if (QtMocHelpers::indexOfMethod<void (MapSelectionWindow::*)(const QString & , const QString & )>(_a, &MapSelectionWindow::mapChosen, 0))
             return;
         if (QtMocHelpers::indexOfMethod<void (MapSelectionWindow::*)()>(_a, &MapSelectionWindow::canceled, 1))
             return;
@@ -128,9 +129,9 @@ int MapSelectionWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void MapSelectionWindow::mapChosen(const QString & _t1)
+void MapSelectionWindow::mapChosen(const QString & _t1, const QString & _t2)
 {
-    QMetaObject::activate<void>(this, &staticMetaObject, 0, nullptr, _t1);
+    QMetaObject::activate<void>(this, &staticMetaObject, 0, nullptr, _t1, _t2);
 }
 
 // SIGNAL 1

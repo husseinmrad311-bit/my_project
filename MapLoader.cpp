@@ -1,6 +1,5 @@
-// this file is the map file parser.
-// it reads a .txt map file and converts it into your internal structure:
-// MapData -> Board -> grid of Cell.
+// MapLoader.cpp
+// Parses map layout + optional state file
 
 #include "MapLoader.h"
 
@@ -11,23 +10,22 @@
 #include <QRegularExpression>
 
 // --------------------------------------------------
-// Layout parsing (UNCHANGED)
+// Layout parsing
 // --------------------------------------------------
 
 static bool parseCellSegment(const QString& seg, Cell& outCell)
 {
     const QString s = seg.trimmed();
 
-    // empty segment => spacing
     if (s.isEmpty()) {
         outCell.tileId.clear();
         outCell.type = -1;
         return true;
     }
 
-    // expects: A01:0 , B07:2 , etc (supports -1 too)
     static const QRegularExpression re(R"(^([A-Za-z]\d{2})\s*:\s*(-?\d+)$)");
     const QRegularExpressionMatch m = re.match(s);
+
     if (!m.hasMatch())
         return false;
 
@@ -37,7 +35,7 @@ static bool parseCellSegment(const QString& seg, Cell& outCell)
 }
 
 // --------------------------------------------------
-// Phase 2: helper functions
+// Helpers
 // --------------------------------------------------
 
 static Side parseSide(const QString& s)
@@ -78,6 +76,10 @@ bool MapLoader::loadFromFile(const QString& filePath,
     int maxCols = 0;
 
     static const QRegularExpression leadingNumber(R"(^\s*\d+\s*)");
+
+    // --------------------------------------------------
+    // Parse Layout
+    // --------------------------------------------------
 
     while (!in.atEnd()) {
         QString line = in.readLine();
@@ -125,9 +127,11 @@ bool MapLoader::loadFromFile(const QString& filePath,
 
     for (int r = 0; r < board.rows; ++r) {
         for (int c = 0; c < board.cols; ++c) {
+
             Cell cell;
             cell.tileId.clear();
             cell.type = -1;
+
             if (c < parsedRows[r].size())
                 cell = parsedRows[r][c];
 
@@ -135,11 +139,10 @@ bool MapLoader::loadFromFile(const QString& filePath,
         }
     }
 
-    // Build adjacency graph
     board.buildNeighbors();
 
     // --------------------------------------------------
-    // Phase 2 – parse map_state.txt
+    // Parse State File (if exists)
     // --------------------------------------------------
 
     QFileInfo info(filePath);
@@ -149,21 +152,22 @@ bool MapLoader::loadFromFile(const QString& filePath,
     out.stateFilePath = statePath;
 
     QFile stateFile(statePath);
-    if (stateFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-
+    if (stateFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
         QTextStream sin(&stateFile);
 
-        while (!sin.atEnd()) {
+        while (!sin.atEnd())
+        {
             QString line = sin.readLine().trimmed();
             if (line.isEmpty())
                 continue;
 
-            // Format: B13:A,Sniper  OR  A23:B,Mark
+            // Format: A03:A,Scout
             QStringList parts = line.split(':');
             if (parts.size() != 2)
                 continue;
 
-            QString cellId = parts[0].toUpper();
+            QString cellId = parts[0].trimmed().toUpper();
             QStringList rhs = parts[1].split(',');
             if (rhs.size() != 2)
                 continue;
@@ -171,17 +175,39 @@ bool MapLoader::loadFromFile(const QString& filePath,
             Side side = parseSide(rhs[0].trimmed());
             QString typeStr = rhs[1].trimmed();
 
-            for (int r = 0; r < board.rows; ++r) {
-                for (int c = 0; c < board.cols; ++c) {
+            for (int r = 0; r < board.rows; ++r)
+            {
+                for (int c = 0; c < board.cols; ++c)
+                {
                     Cell& cell = board.grid[r][c];
-                    if (cell.tileId == cellId) {
 
-                        if (typeStr == "Mark") {
-                            cell.marked = true;
-                            cell.markedBy = side;
-                            cell.controlledBy = side;
-                        } else {
-                            cell.agent = parseAgentType(typeStr);
+                    if (cell.tileId != cellId)
+                        continue;
+
+                    // -----------------------------
+                    // MARK
+                    // -----------------------------
+                    if (typeStr == "Mark")
+                    {
+                        cell.marked = true;
+                        cell.markedBy = side;
+                    }
+                    // -----------------------------
+                    // CONTROL
+                    // -----------------------------
+                    else if (typeStr == "Control")
+                    {
+                        cell.controlledBy = side;
+                    }
+                    // -----------------------------
+                    // AGENT
+                    // -----------------------------
+                    else
+                    {
+                        AgentType agent = parseAgentType(typeStr);
+                        if (agent != AgentType::None)
+                        {
+                            cell.agent = agent;
                             cell.agentSide = side;
                         }
                     }
@@ -195,5 +221,6 @@ bool MapLoader::loadFromFile(const QString& filePath,
     out.mapName = info.baseName();
     out.description.clear();
     out.board = board;
+
     return true;
 }

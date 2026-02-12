@@ -1,0 +1,16 @@
+B05:A,Sniper
+A11:A,Seargeant
+B09:A,Scout
+B08:B,Sniper
+A15:B,Seargeant
+B12:B,Scout
+A06:A,Mark
+A16:A,Mark
+B05:A,Mark
+A11:A,Mark
+B09:A,Mark
+A10:B,Mark
+A20:B,Mark
+B08:B,Mark
+A15:B,Mark
+B12:B,Mark

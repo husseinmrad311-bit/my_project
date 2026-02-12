@@ -26,12 +26,14 @@ public:
     QPushButton *selectButton;
     QPushButton *cancelButton;
     QLabel *titleLabel;
+    QLabel *stateLabel;
+    QListWidget *stateListWidget;
 
     void setupUi(QWidget *MapSelectionWindow)
     {
         if (MapSelectionWindow->objectName().isEmpty())
             MapSelectionWindow->setObjectName("MapSelectionWindow");
-        MapSelectionWindow->resize(869, 639);
+        MapSelectionWindow->resize(886, 827);
         backgroundLabel = new QLabel(MapSelectionWindow);
         backgroundLabel->setObjectName("backgroundLabel");
         backgroundLabel->setGeometry(QRect(0, 0, 881, 361));
@@ -45,12 +47,12 @@ public:
 "selection-color: rgb(255, 255, 255);"));
         selectButton = new QPushButton(MapSelectionWindow);
         selectButton->setObjectName("selectButton");
-        selectButton->setGeometry(QRect(400, 540, 461, 29));
+        selectButton->setGeometry(QRect(410, 500, 461, 29));
         selectButton->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 255);\n"
 "background-color: rgb(0, 85, 0);"));
         cancelButton = new QPushButton(MapSelectionWindow);
         cancelButton->setObjectName("cancelButton");
-        cancelButton->setGeometry(QRect(400, 580, 461, 29));
+        cancelButton->setGeometry(QRect(410, 540, 461, 29));
         cancelButton->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 255);\n"
 "background-color: rgb(0, 85, 0);"));
         titleLabel = new QLabel(MapSelectionWindow);
@@ -59,6 +61,18 @@ public:
         titleLabel->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 85, 0);\n"
 "color: rgb(255, 255, 255);"));
         titleLabel->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        stateLabel = new QLabel(MapSelectionWindow);
+        stateLabel->setObjectName("stateLabel");
+        stateLabel->setGeometry(QRect(10, 680, 381, 101));
+        stateLabel->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 85, 0);\n"
+"color: rgb(255, 255, 255);"));
+        stateLabel->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        stateListWidget = new QListWidget(MapSelectionWindow);
+        stateListWidget->setObjectName("stateListWidget");
+        stateListWidget->setGeometry(QRect(430, 590, 411, 231));
+        stateListWidget->setStyleSheet(QString::fromUtf8("background-color: rgb(184, 174, 100);\n"
+"selection-background-color: rgb(0, 85, 0);\n"
+"selection-color: rgb(255, 255, 255);"));
 
         retranslateUi(MapSelectionWindow);
 
@@ -72,6 +86,7 @@ public:
         selectButton->setText(QCoreApplication::translate("MapSelectionWindow", "SELECT", nullptr));
         cancelButton->setText(QCoreApplication::translate("MapSelectionWindow", "CANCEL", nullptr));
         titleLabel->setText(QCoreApplication::translate("MapSelectionWindow", "BE CAREFULL WHILE CHOOSING YOU LAND : )", nullptr));
+        stateLabel->setText(QCoreApplication::translate("MapSelectionWindow", "Select State File:", nullptr));
     } // retranslateUi
 
 };

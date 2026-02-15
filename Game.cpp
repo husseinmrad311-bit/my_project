@@ -72,6 +72,7 @@ Game::Game(const std::string& name1,const std::string& name2)
 
         drawCard();
         displayTurnInfo();
+        checkWinConditions();
     }
 
     void Game::endTurn() {
@@ -127,8 +128,12 @@ Game::Game(const std::string& name1,const std::string& name2)
 
     // --------------------------------------------------
     // ACTION VALIDATION
-    // --------------------------------------------------
     bool Game::isActionAllowed(AgentType agentType, const std::string& actionType) {
+        std::cout << "isActionAllowed - Agent: "
+                  << (agentType == AgentType::Scout ? "Scout" :
+                          agentType == AgentType::Sniper ? "Sniper" : "Sergeant")
+                  << ", Action: " << actionType << std::endl;
+
         switch (agentType) {
         case AgentType::Scout:
             return actionType == "move" || actionType == "scout" || actionType == "attack";
@@ -138,6 +143,7 @@ Game::Game(const std::string& name1,const std::string& name2)
             return actionType == "move" || actionType == "attack"
                    || actionType == "control" || actionType == "release";
         default:
+            std::cout << "Unknown agent type!" << std::endl;
             return false;
         }
     }
@@ -145,30 +151,127 @@ Game::Game(const std::string& name1,const std::string& name2)
     // --------------------------------------------------
     // MOVE
     // --------------------------------------------------
-    bool Game::movePiece(AgentType agentType, const std::string& targetCoord) {
+    bool Game::movePiece(AgentType agentType, const std::string& targetCoord)
+    {
+        // ===== VALIDATION CHECKS =====
         Player* current = getCurrentPlayer();
+        if (!current) {
+            std::cout << "ERROR: No current player\n";
+            return false;
+        }
+
         Unit* piece = current->getAgentPiece(agentType);
-        if (!piece || !piece->getPosition()) return false;
+        if (!piece) {
+            std::cout << "ERROR: No piece found for agent type\n";
+            return false;
+        }
 
         Cell* from = piece->getPosition();
+        if (!from) {
+            std::cout << "ERROR: Piece has no position (not placed on board)\n";
+            return false;
+        }
+
+        // Validate that 'from' cell belongs to this board
+        bool fromValid = false;
+        for (int r = 0; r < board.rows && !fromValid; ++r) {
+            for (int c = 0; c < board.cols && !fromValid; ++c) {
+                if (from == &board.grid[r][c]) {
+                    fromValid = true;
+                }
+            }
+        }
+        if (!fromValid) {
+            std::cout << "ERROR: From cell does not belong to current board!\n";
+            return false;
+        }
+
+        // ===== FIND TARGET CELL =====
         Cell* to = nullptr;
 
-        for (Cell* n : from->neighbors) {
-            if (n && n->tileId.toStdString() == targetCoord) {
-                to = n;
+        if (targetCoord.empty()) {
+            std::cout << "ERROR: Empty target coordinate\n";
+            return false;
+        }
+
+        // First, find target cell in board
+        Cell* targetCell = nullptr;
+        for (int r = 0; r < board.rows; ++r) {
+            for (int c = 0; c < board.cols; ++c) {
+                if (board.grid[r][c].tileId.toStdString() == targetCoord) {
+                    targetCell = &board.grid[r][c];
+                    break;
+                }
+            }
+        }
+
+        if (!targetCell) {
+            std::cout << "ERROR: Target cell " << targetCoord << " not found in board\n";
+            return false;
+        }
+
+        // Now check if target is a neighbor of from
+        bool isNeighbor = false;
+        for (Cell* neighbor : from->neighbors) {
+            if (neighbor == targetCell) {
+                isNeighbor = true;
+                to = targetCell;
                 break;
             }
         }
 
-        if (!to || to->isOccupied()) return false;
-        if (agentType != AgentType::Scout && !to->marked) return false;
+        if (!isNeighbor) {
+            std::cout << "Move failed: target " << targetCoord
+                      << " is not adjacent to " << from->tileId.toStdString() << "\n";
+            return false;
+        }
 
-        from->clearAgent();
-        to->setAgent(agentType, current->getId() == 1 ? Side::A : Side::B);
-        piece->setPosition(to);
-        return true;
+        // ===== VALIDATE TARGET CELL =====
+
+        if (to->isOccupied()) {
+            std::cout << "Move failed: tile " << targetCoord << " is occupied\n";
+            return false;
+        }
+
+        if (agentType != AgentType::Scout) {
+            if (!to->marked) {
+                std::cout << "Move failed: tile " << targetCoord
+                          << " is not marked (scouted)\n";
+                return false;
+            }
+
+            Side mySide = (current->getId() == 1 ? Side::A : Side::B);
+            if (to->markedBy != mySide) {
+                std::cout << "Move failed: tile " << targetCoord
+                          << " is marked by opponent\n";
+                return false;
+            }
+        }
+
+        // ===== PERFORM MOVEMENT SAFELY =====
+        try {
+            // 1. Clear origin cell
+            from->clearAgent();
+
+            // 2. Set destination cell
+            Side mySide = (current->getId() == 1 ? Side::A : Side::B);
+            to->setAgent(agentType, mySide);
+
+            // 3. Update unit's position
+            piece->setPosition(to);
+
+            std::cout << "Move successful: "
+                      << piece->getTypeName() << " moved from "
+                      << from->tileId.toStdString() << " to "
+                      << to->tileId.toStdString() << "\n";
+
+            return true;
+
+        } catch (const std::exception& e) {
+            std::cout << "EXCEPTION during move: " << e.what() << "\n";
+            return false;
+        }
     }
-
     // --------------------------------------------------
     // SCOUT
     // --------------------------------------------------
@@ -188,41 +291,107 @@ Game::Game(const std::string& name1,const std::string& name2)
     // --------------------------------------------------
     // ATTACK
     // --------------------------------------------------
-    bool Game::attackPiece(AgentType agentType, const std::string&) {
+    bool Game::attackPiece(AgentType agentType, const std::string& targetCoord)
+    {
+        Player* attacker = getCurrentPlayer();
+        Player* defender = getOpponent();
+
+        Unit* attackerUnit = attacker->getAgentPiece(agentType);
+        if (!attackerUnit || !attackerUnit->getPosition())
+            return false;
+
+        // Find target cell
+        Cell* targetCell = nullptr;
+
+        for (int r = 0; r < board.rows; ++r)
+        {
+            for (int c = 0; c < board.cols; ++c)
+            {
+                if (board.grid[r][c].tileId.toStdString() == targetCoord)
+                {
+                    targetCell = &board.grid[r][c];
+                    break;
+                }
+            }
+        }
+
+        if (!targetCell)
+            return false;
+
+        Side mySide = (attacker->getId() == 1 ? Side::A : Side::B);
+        Side enemySide = (mySide == Side::A ? Side::B : Side::A);
+
+        // Must contain enemy unit
+        if (!targetCell->isOccupiedBy(enemySide)) {
+            std::cout << "No enemy unit at target\n";
+            return false;
+        }
+
+        std::cout << "Target unit type: "
+                  << (targetCell->agent == AgentType::Scout ? "Scout" :
+                          targetCell->agent == AgentType::Sniper ? "Sniper" : "Sergeant")
+                  << "\n";
+
         return CombatSystem::performAttack(
             agentType,
-            getCurrentPlayer(),
-            getOpponent()
+            attacker,
+            defender,
+            targetCell
             );
     }
 
     // --------------------------------------------------
     // CONTROL
     // --------------------------------------------------
-    bool Game::controlTile(const std::string&) {
+    bool Game::controlTile(const std::string&)
+    {
         Player* current = getCurrentPlayer();
+        Player* opponent = getOpponent();
+
         Unit* sergeant = current->getAgentPiece(AgentType::Seargeant);
-        if (!sergeant || !sergeant->getPosition()) return false;
+        if (!sergeant || !sergeant->getPosition())
+            return false;
 
         Cell* cell = sergeant->getPosition();
-        if (cell->controlledBy != Side::None) return false;
 
-        cell->controlledBy = (current->getId() == 1 ? Side::A : Side::B);
+        Side mySide = (current->getId() == 1 ? Side::A : Side::B);
+        Side opponentSide = (mySide == Side::A ? Side::B : Side::A);
+
+        // Must not already be controlled
+        if (cell->controlledBy != Side::None)
+            return false;
+
+        // 🔥 MUST NOT contain enemy piece
+        if (cell->isOccupiedBy(opponentSide))
+            return false;
+
+        cell->controlledBy = mySide;
         return true;
     }
 
     // --------------------------------------------------
     // RELEASE
     // --------------------------------------------------
-    bool Game::releaseTile(const std::string&) {
+    bool Game::releaseTile(const std::string&)
+    {
         Player* current = getCurrentPlayer();
+        Player* opponent = getOpponent();
+
         Unit* sergeant = current->getAgentPiece(AgentType::Seargeant);
-        if (!sergeant || !sergeant->getPosition()) return false;
+        if (!sergeant || !sergeant->getPosition())
+            return false;
 
         Cell* cell = sergeant->getPosition();
-        Side mySide = (current->getId() == 1 ? Side::A : Side::B);
 
-        if (cell->controlledBy == Side::None || cell->controlledBy == mySide)
+        Side mySide = (current->getId() == 1 ? Side::A : Side::B);
+        Side opponentSide = (mySide == Side::A ? Side::B : Side::A);
+
+        // Must be controlled by enemy
+        if (cell->controlledBy != opponentSide)
+            return false;
+
+        // 🔥 Must not contain enemy piece
+        if (cell->isOccupiedBy(opponentSide))
             return false;
 
         cell->controlledBy = Side::None;
@@ -299,7 +468,10 @@ Game::Game(const std::string& name1,const std::string& name2)
                                      data, error))
             return false;
 
-        board = data.board;
+        // IMPORTANT: Use move, not copy!
+        board = std::move(data.board);  // ✅ This uses move assignment
+        // board = data.board;           // ❌ This tries to use deleted copy assignment
+
         return true;
     }
 
@@ -310,6 +482,14 @@ Game::Game(const std::string& name1,const std::string& name2)
 
     void Game::synchronizeUnitsWithBoard()
     {
+        // First, clear all unit positions
+        for (auto& player : players) {
+            for (auto& piece : player->getPieces()) {
+                piece->setPosition(nullptr);
+            }
+        }
+
+        // Then set them from board
         for (int r = 0; r < board.rows; ++r)
         {
             for (int c = 0; c < board.cols; ++c)
@@ -319,15 +499,15 @@ Game::Game(const std::string& name1,const std::string& name2)
                 if (cell.agent == AgentType::None)
                     continue;
 
-                Player* player =
-                    (cell.agentSide == Side::A)
-                        ? players[0].get()
-                        : players[1].get();
+                Player* player = (cell.agentSide == Side::A) ? players[0].get() : players[1].get();
 
                 Unit* unit = player->getAgentPiece(cell.agent);
-
-                if (unit)
+                if (unit) {
                     unit->setPosition(&cell);
+                    std::cout << "  Synced " << unit->getTypeName()
+                              << " [P" << player->getId() << "] to "
+                              << cell.tileId.toStdString() << std::endl;
+                }
             }
         }
     }
@@ -336,92 +516,40 @@ Game::Game(const std::string& name1,const std::string& name2)
 
     bool Game::loadStateFile(const std::string& path)
     {
-        QFile file(QString::fromStdString(path));
+        std::cout << "\n=== LOADING STATE FILE: " << path << " ===\n";
 
-        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        QString error;
+        bool success = MapLoader::loadStateFile(
+            QString::fromStdString(path),
+            board,
+            error
+            );
+
+        if (!success) {
+            std::cout << "Failed to load state file: " << error.toStdString() << std::endl;
             return false;
+        }
 
-        QTextStream in(&file);
+        // Synchronize units with new board positions
+        std::cout << "Synchronizing units with board...\n";
+        synchronizeUnitsWithBoard();
 
-        while (!in.atEnd())
-        {
-            QString line = in.readLine().trimmed();
-            if (line.isEmpty())
-                continue;
-
-            QStringList parts = line.split(':');
-            if (parts.size() != 2)
-                continue;
-
-            QString cellId = parts[0].trimmed().toUpper();
-            QStringList rhs = parts[1].split(',');
-            if (rhs.size() != 2)
-                continue;
-
-            Side side = Side::None;
-            if (rhs[0].trimmed() == "A") side = Side::A;
-            else if (rhs[0].trimmed() == "B") side = Side::B;
-
-            QString typeStr = rhs[1].trimmed();
-
-            for (int r = 0; r < board.rows; ++r)
-            {
-                for (int c = 0; c < board.cols; ++c)
-                {
-                    Cell& cell = board.grid[r][c];
-
-                    if (cell.tileId != cellId)
-                        continue;
-
-                    // -----------------------------
-                    // MARK
-                    // -----------------------------
-                    if (typeStr == "Mark")
-                    {
-                        cell.marked = true;
-                        cell.markedBy = side;
-                    }
-                    // -----------------------------
-                    // CONTROL
-                    // -----------------------------
-                    else if (typeStr == "Control")
-                    {
-                        cell.controlledBy = side;
-                    }
-                    // -----------------------------
-                    // AGENT + UNIT SYNC
-                    // -----------------------------
-                    else
-                    {
-                        AgentType agent = AgentType::None;
-
-                        if (typeStr == "Scout")
-                            agent = AgentType::Scout;
-                        else if (typeStr == "Sniper")
-                            agent = AgentType::Sniper;
-                        else if (typeStr == "Seargeant")
-                            agent = AgentType::Seargeant;
-
-                        if (agent != AgentType::None)
-                        {
-                            // Update board cell
-                            cell.agent = agent;
-                            cell.agentSide = side;
-
-                            // Synchronize Player unit position
-                            int playerIndex = (side == Side::A) ? 0 : 1;
-                            Player* player = players[playerIndex].get();
-
-                            Unit* unit = player->getAgentPiece(agent);
-                            if (unit)
-                            {
-                                unit->setPosition(&cell);
-                            }
-                        }
-                    }
+        // Verify the synchronization
+        for (const auto& player : players) {
+            for (const auto& piece : player->getPieces()) {
+                Cell* pos = piece->getPosition();
+                if (pos) {
+                    std::cout << "  " << piece->getTypeName()
+                    << " [P" << player->getId() << "] at "
+                    << pos->tileId.toStdString() << std::endl;
+                } else {
+                    std::cout << "  WARNING: " << piece->getTypeName()
+                    << " [P" << player->getId() << "] has no position!" << std::endl;
                 }
             }
         }
 
+        std::cout << "=== STATE FILE LOADED ===\n\n";
         return true;
     }
+

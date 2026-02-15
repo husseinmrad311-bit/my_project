@@ -10,7 +10,19 @@ int Unit::getPlayerId() const { return playerId; }
 Unit::Type Unit::getType() const { return type; }
 Cell* Unit::getPosition() const { return position; }
 
-void Unit::setPosition(Cell* cell) { position = cell; }
+// MODIFIED: Add validation in setPosition
+void Unit::setPosition(Cell* cell)
+{
+    // Optional debug - remove if too verbose
+    if (cell) {
+        std::cout << "Unit " << getTypeName() << " moving to cell: "
+                  << cell->tileId.toStdString() << std::endl;
+    } else {
+        std::cout << "Unit " << getTypeName() << " position set to NULL" << std::endl;
+    }
+
+    position = cell;
+}
 
 std::string Unit::getTypeName() const {
     switch (type) {

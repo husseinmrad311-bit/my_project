@@ -8,6 +8,7 @@
 #include <QStringList>
 #include <QFileInfo>
 #include <QRegularExpression>
+#include <iostream>
 
 // --------------------------------------------------
 // Layout parsing
@@ -142,85 +143,134 @@ bool MapLoader::loadFromFile(const QString& filePath,
     board.buildNeighbors();
 
     // --------------------------------------------------
-    // Parse State File (if exists)
+    // Store map info without loading state
     // --------------------------------------------------
 
     QFileInfo info(filePath);
-    QString statePath =
-        info.path() + "/" + info.completeBaseName() + "_state.txt";
+    out.mapName = info.baseName();
+    out.description.clear();
+    out.board = std::move(board);
+    out.stateFilePath = "";  // Will be set separately when loading state
 
-    out.stateFilePath = statePath;
+    return true;
+}
 
-    QFile stateFile(statePath);
-    if (stateFile.open(QIODevice::ReadOnly | QIODevice::Text))
+// NEW FUNCTION: Load state file separately
+bool MapLoader::loadStateFile(const QString& stateFilePath, Board& board, QString& errorMessage)
+{
+    errorMessage.clear();
+
+    std::cout << "\n=== LOADING STATE FILE: " << stateFilePath.toStdString() << " ===\n";
+
+    QFile stateFile(stateFilePath);
+    if (!stateFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        errorMessage = "Cannot open state file:\n" + stateFilePath;
+        return false;
+    }
+
+    // FIRST: Clear all existing agents from the board
+    std::cout << "Clearing all existing agents from board...\n";
+    for (int r = 0; r < board.rows; ++r) {
+        for (int c = 0; c < board.cols; ++c) {
+            board.grid[r][c].clearAgent();
+            board.grid[r][c].marked = false;
+            board.grid[r][c].markedBy = Side::None;
+            board.grid[r][c].controlledBy = Side::None;
+        }
+    }
+
+    QTextStream sin(&stateFile);
+    int agentsPlaced = 0;
+    int marksPlaced = 0;
+    int controlsPlaced = 0;
+
+    while (!sin.atEnd())
     {
-        QTextStream sin(&stateFile);
+        QString line = sin.readLine().trimmed();
+        if (line.isEmpty() || line.startsWith('#'))
+            continue;
 
-        while (!sin.atEnd())
+        // Format: A03:A,Scout
+        QStringList parts = line.split(':');
+        if (parts.size() != 2) {
+            std::cout << "  WARNING: Invalid line format: " << line.toStdString() << std::endl;
+            continue;
+        }
+
+        QString cellId = parts[0].trimmed().toUpper();
+        QStringList rhs = parts[1].split(',');
+        if (rhs.size() != 2) {
+            std::cout << "  WARNING: Invalid RHS format: " << parts[1].toStdString() << std::endl;
+            continue;
+        }
+
+        Side parsedSide = parseSide(rhs[0].trimmed());
+        QString typeStr = rhs[1].trimmed();
+
+        bool found = false;
+        for (int r = 0; r < board.rows; ++r)
         {
-            QString line = sin.readLine().trimmed();
-            if (line.isEmpty())
-                continue;
-
-            // Format: A03:A,Scout
-            QStringList parts = line.split(':');
-            if (parts.size() != 2)
-                continue;
-
-            QString cellId = parts[0].trimmed().toUpper();
-            QStringList rhs = parts[1].split(',');
-            if (rhs.size() != 2)
-                continue;
-
-            Side side = parseSide(rhs[0].trimmed());
-            QString typeStr = rhs[1].trimmed();
-
-            for (int r = 0; r < board.rows; ++r)
+            for (int c = 0; c < board.cols; ++c)
             {
-                for (int c = 0; c < board.cols; ++c)
+                Cell& cell = board.grid[r][c];
+
+                if (cell.tileId.trimmed().toUpper() == cellId)
                 {
-                    Cell& cell = board.grid[r][c];
+                    found = true;
 
-                    if (cell.tileId != cellId)
-                        continue;
-
-                    // -----------------------------
                     // MARK
-                    // -----------------------------
-                    if (typeStr == "Mark")
+                    if (typeStr.compare("Mark", Qt::CaseInsensitive) == 0)
                     {
                         cell.marked = true;
-                        cell.markedBy = side;
+                        cell.markedBy = parsedSide;
+                        marksPlaced++;
+                        std::cout << "  Marked " << cellId.toStdString()
+                                  << " for " << (parsedSide == Side::A ? "A" : "B") << std::endl;
                     }
-                    // -----------------------------
                     // CONTROL
-                    // -----------------------------
-                    else if (typeStr == "Control")
+                    else if (typeStr.compare("Control", Qt::CaseInsensitive) == 0)
                     {
-                        cell.controlledBy = side;
+                        cell.controlledBy = parsedSide;
+                        controlsPlaced++;
+                        std::cout << "  Controlled " << cellId.toStdString()
+                                  << " by " << (parsedSide == Side::A ? "A" : "B") << std::endl;
                     }
-                    // -----------------------------
                     // AGENT
-                    // -----------------------------
                     else
                     {
                         AgentType agent = parseAgentType(typeStr);
                         if (agent != AgentType::None)
                         {
-                            cell.agent = agent;
-                            cell.agentSide = side;
+                            // IMPORTANT: Only place if cell is empty
+                            if (cell.agent == AgentType::None) {
+                                cell.agent = agent;
+                                cell.agentSide = parsedSide;
+                                agentsPlaced++;
+                                std::cout << "  Placed " << typeStr.toStdString()
+                                          << " for " << (parsedSide == Side::A ? "A" : "B")
+                                          << " at " << cellId.toStdString() << std::endl;
+                            } else {
+                                std::cout << "  ERROR: Cell " << cellId.toStdString()
+                                << " already has an agent! Skipping.\n";
+                            }
                         }
                     }
+                    break;
                 }
             }
+            if (found) break;
+        }
+
+        if (!found) {
+            std::cout << "  WARNING: Cell " << cellId.toStdString() << " not found in board!\n";
         }
     }
 
-    // --------------------------------------------------
-
-    out.mapName = info.baseName();
-    out.description.clear();
-    out.board = board;
+    std::cout << "State loading complete: "
+              << agentsPlaced << " agents, "
+              << marksPlaced << " marks, "
+              << controlsPlaced << " controls placed.\n";
+    std::cout << "========================================\n";
 
     return true;
 }

@@ -33,7 +33,7 @@ public:
     {
         if (LoginPage->objectName().isEmpty())
             LoginPage->setObjectName("LoginPage");
-        LoginPage->resize(400, 300);
+        LoginPage->resize(400, 330);
         verticalLayout = new QVBoxLayout(LoginPage);
         verticalLayout->setObjectName("verticalLayout");
         backgroundLabel = new QLabel(LoginPage);
@@ -106,8 +106,8 @@ public:
         instructionsLabel->setText(QCoreApplication::translate("LoginPage", "Minimum 8 characters\n"
 "Start with letter (A-Z/a-z)\n"
 "Must include: 1 number + 1 special char + both upper & lowercase", nullptr));
-        player1LineEdit->setText(QCoreApplication::translate("LoginPage", "PLAYEr@1", nullptr));
-        player2LineEdit->setText(QCoreApplication::translate("LoginPage", "PLAYEr@1", nullptr));
+        player1LineEdit->setText(QCoreApplication::translate("LoginPage", "Player-1", nullptr));
+        player2LineEdit->setText(QCoreApplication::translate("LoginPage", "Player-2", nullptr));
         selectMapButton->setText(QCoreApplication::translate("LoginPage", "SELECT MAP", nullptr));
     } // retranslateUi
 

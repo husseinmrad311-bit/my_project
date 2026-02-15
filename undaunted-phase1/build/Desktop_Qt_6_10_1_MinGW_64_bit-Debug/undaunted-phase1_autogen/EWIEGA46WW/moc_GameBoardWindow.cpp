@@ -42,7 +42,8 @@ template <> constexpr inline auto GameBoardWindow::qt_create_metaobjectdata<qt_m
         "GameBoardWindow",
         "onCellClicked",
         "",
-        "tileId"
+        "tileId",
+        "checkForGameOver"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -50,6 +51,8 @@ template <> constexpr inline auto GameBoardWindow::qt_create_metaobjectdata<qt_m
         QtMocHelpers::SlotData<void(const QString &)>(1, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { QMetaType::QString, 3 },
         }}),
+        // Slot 'checkForGameOver'
+        QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -74,6 +77,7 @@ void GameBoardWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: _t->onCellClicked((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 1: _t->checkForGameOver(); break;
         default: ;
         }
     }
@@ -98,14 +102,14 @@ int GameBoardWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 2)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 2;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 1)
+        if (_id < 2)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 1;
+        _id -= 2;
     }
     return _id;
 }

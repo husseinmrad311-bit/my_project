@@ -10,6 +10,15 @@
 class Game {
 public:
     Game(const std::string& name1,const std::string& name2);
+
+    // Disable copy
+    Game(const Game&) = delete;
+    Game& operator=(const Game&) = delete;
+
+    // Enable move
+    Game(Game&&) = default;
+    Game& operator=(Game&&) = default;
+
     bool loadMap(const std::string& path);
 
     // Core state
@@ -49,11 +58,15 @@ public:
 
     void displayGameState() const;
     void displayTurnInfo() const;
-    bool loadStateFile(const std::string& path);
-private:
 
+    // NEW: Load state file
+    bool loadStateFile(const std::string& path);
+
+private:
     void initializePlayers();
     void initializeBoard();
+
+    // IMPORTANT: This function MUST be declared here!
     void synchronizeUnitsWithBoard();
 
     bool isActionAllowed(AgentType agentType,

@@ -9,6 +9,7 @@
 #include <QResizeEvent>
 #include "CellItem.h"
 #include "Game.h"
+#include <QMessageBox>
 
 class GameBoardWindow : public QWidget
 {
@@ -30,8 +31,9 @@ private:
     void renderBoardFromGame();
     void fitBoardToView();
     void handleAction(const std::string& action);
+    void updateStatsPanel(); // NEW: Update player stats
 
-
+    void playSound(bool success) ;
     Game* m_game = nullptr;
     QGraphicsScene* m_scene = nullptr;
 
@@ -41,6 +43,16 @@ private:
     QLabel* currentCardLabel = nullptr;
     QLabel* feedbackLabel = nullptr;
     QLabel* deckInfoLabel = nullptr;
+
+    // ===== NEW: Stats Panel Labels =====
+    QLabel* statsTitleLabel = nullptr;
+    QLabel* player1StatsLabel = nullptr;
+    QLabel* player2StatsLabel = nullptr;
+    QLabel* controlledTilesLabel = nullptr;
+
+    // ===== NEW: Detailed Feedback =====
+    QLabel* actionFeedbackLabel = nullptr;
+    QString lastActionMessage;
 
     // ===== Buttons =====
     QPushButton* moveButton = nullptr;
@@ -53,8 +65,10 @@ private:
     QGraphicsView* boardView = nullptr;
     QString m_selectedTile;
     CellItem* m_selectedItem = nullptr;
+
 private slots:
     void onCellClicked(const QString& tileId);
+    void checkForGameOver() ;
 };
 
 #endif

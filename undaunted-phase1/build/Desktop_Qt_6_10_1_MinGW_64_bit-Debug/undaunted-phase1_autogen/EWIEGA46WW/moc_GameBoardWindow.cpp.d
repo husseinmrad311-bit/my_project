@@ -145,6 +145,7 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtCore/qxptype_traits.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qyieldcpu.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/QColor \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/QPainter \
   C:/Qt/6.10.1/mingw_64/include/QtGui/QResizeEvent \
   C:/Qt/6.10.1/mingw_64/include/QtGui/QTransform \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qaction.h \
@@ -192,17 +193,23 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtGui/qwindowdefs_win.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsObject \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsScene \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsSceneMouseEvent \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsView \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/QLabel \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/QMessageBox \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/QPushButton \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/QWidget \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qabstractbutton.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qdialog.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qdialogbuttonbox.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qframe.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicsitem.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicsscene.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicssceneevent.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicsview.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qlabel.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qmessagebox.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qpushbutton.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qscrollarea.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qsizepolicy.h \

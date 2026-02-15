@@ -9,6 +9,7 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtCore/q20utility.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/q23type_traits.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/q23utility.h \
+  C:/Qt/6.10.1/mingw_64/include/QtCore/qabstracteventdispatcher.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qalgorithms.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qalloc.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qanystringview.h \
@@ -19,6 +20,7 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtCore/qatomic.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qatomic_cxx11.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qbasicatomic.h \
+  C:/Qt/6.10.1/mingw_64/include/QtCore/qbasictimer.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qbindingstorage.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qbytearray.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qbytearrayalgorithms.h \
@@ -36,9 +38,13 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtCore/qcontainerinfo.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qcontainertools_impl.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qcontiguouscache.h \
+  C:/Qt/6.10.1/mingw_64/include/QtCore/qcoreevent.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qdarwinhelpers.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qdatastream.h \
+  C:/Qt/6.10.1/mingw_64/include/QtCore/qdeadlinetimer.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qdebug.h \
+  C:/Qt/6.10.1/mingw_64/include/QtCore/qendian.h \
+  C:/Qt/6.10.1/mingw_64/include/QtCore/qeventloop.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qexceptionhandling.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qflags.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qfloat16.h \
@@ -128,16 +134,25 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtCore/qxptype_traits.h \
   C:/Qt/6.10.1/mingw_64/include/QtCore/qyieldcpu.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/QColor \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/QPainter \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qbrush.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qcolor.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qfont.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qfontinfo.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qfontmetrics.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qfontvariableaxis.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qimage.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpaintdevice.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qpainter.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpainterpath.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qpen.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpixelformat.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpixmap.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qpolygon.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qregion.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qrgb.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qrgba64.h \
+  C:/Qt/6.10.1/mingw_64/include/QtGui/qtextoption.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qtgui-config.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qtguiexports.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qtguiglobal.h \
@@ -145,7 +160,9 @@ D:/Desktop/Undaunted-Phase1/Undaunted-Phase1/undaunted-phase1/build/Desktop_Qt_6
   C:/Qt/6.10.1/mingw_64/include/QtGui/qwindowdefs.h \
   C:/Qt/6.10.1/mingw_64/include/QtGui/qwindowdefs_win.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsObject \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/QGraphicsSceneMouseEvent \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicsitem.h \
+  C:/Qt/6.10.1/mingw_64/include/QtWidgets/qgraphicssceneevent.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qtwidgets-config.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qtwidgetsexports.h \
   C:/Qt/6.10.1/mingw_64/include/QtWidgets/qtwidgetsglobal.h \

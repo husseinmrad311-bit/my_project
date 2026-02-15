@@ -1,8 +1,6 @@
 #include "CellItem.h"
-#include <QPainter>
-#include <QGraphicsSceneMouseEvent>
 
-CellItem::CellItem(const Cell& cell,
+CellItem::CellItem(Cell* cell,
                    int size,
                    QGraphicsItem* parent)
     : QGraphicsObject(parent),
@@ -21,38 +19,61 @@ void CellItem::paint(QPainter* painter,
                      const QStyleOptionGraphicsItem*,
                      QWidget*)
 {
-    // ----- Tile Color -----
+    if (!m_cell)
+        return;
+
+    painter->setRenderHint(QPainter::Antialiasing, true);
+
+    // --------------------------------------------------
+    // 1️⃣ Base Terrain Color
+    // --------------------------------------------------
     QColor color;
-    switch (m_cell.type)
+
+    switch (m_cell->type)
     {
-    case 0: color = QColor(220,220,220); break;
-    case 1: color = QColor(80,170,80); break;
-    case 2: color = QColor(80,120,200); break;
+    case 0: color = QColor(220,220,220); break; // neutral
+    case 1: color = QColor(80,170,80);   break; // forest
+    case 2: color = QColor(80,120,200);  break; // house
     default: color = Qt::gray;
     }
 
+    // --------------------------------------------------
+    // 2️⃣ Controlled Tile Overlay
+    // --------------------------------------------------
+    if (m_cell->controlledBy == Side::A)
+        color = QColor(120,170,255); // Blue tint
+    else if (m_cell->controlledBy == Side::B)
+        color = QColor(255,140,140); // Red tint
+
     painter->setBrush(color);
 
-    if (m_selected)
-        painter->setPen(QPen(Qt::yellow, 3));
-    else
-        painter->setPen(QPen(Qt::black, 1));
+    // --------------------------------------------------
+    // 3️⃣ Border
+    // --------------------------------------------------
+    QPen borderPen = m_selected
+                         ? QPen(Qt::yellow, 3)
+                         : QPen(Qt::black, 1);
 
+    painter->setPen(borderPen);
     painter->drawRect(boundingRect());
 
-    // ----- Tile ID -----
+    // --------------------------------------------------
+    // 4️⃣ Tile ID
+    // --------------------------------------------------
     painter->setPen(Qt::black);
     painter->drawText(boundingRect(),
                       Qt::AlignTop | Qt::AlignHCenter,
-                      m_cell.tileId);
+                      m_cell->tileId);
 
-    // ----- Agent Rendering -----
-    if (m_cell.agent != AgentType::None)
+    // --------------------------------------------------
+    // 5️⃣ Agent Rendering
+    // --------------------------------------------------
+    if (m_cell->agent != AgentType::None)
     {
         QColor agentColor =
-            (m_cell.agentSide == Side::A)
-                ? QColor(0, 0, 200)
-                : QColor(200, 0, 0);
+            (m_cell->agentSide == Side::A)
+                ? QColor(0,0,200)     // Player A
+                : QColor(200,0,0);    // Player B
 
         int margin = 15;
         QRectF circleRect(margin,
@@ -64,25 +85,44 @@ void CellItem::paint(QPainter* painter,
         painter->setPen(Qt::black);
         painter->drawEllipse(circleRect);
 
-        QString text;
-        switch (m_cell.agent)
+        QString label;
+        switch (m_cell->agent)
         {
-        case AgentType::Scout: text = "S"; break;
-        case AgentType::Sniper: text = "N"; break;
-        case AgentType::Seargeant: text = "SG"; break;
+        case AgentType::Scout:     label = "S";  break;
+        case AgentType::Sniper:    label = "N";  break;
+        case AgentType::Seargeant: label = "SG"; break;
         default: break;
         }
 
         painter->setPen(Qt::white);
         painter->drawText(circleRect,
                           Qt::AlignCenter,
-                          text);
+                          label);
+    }
+
+    // --------------------------------------------------
+    // 6️⃣ Mark Indicator (Dashed Border)
+    // --------------------------------------------------
+    if (m_cell->marked)
+    {
+        QPen markPen(
+            (m_cell->markedBy == Side::A)
+                ? QColor(0,255,0)      // Green
+                : QColor(0,255,255)    // Cyan
+            );
+
+        markPen.setStyle(Qt::DashLine);
+        markPen.setWidth(2);
+
+        painter->setPen(markPen);
+        painter->setBrush(Qt::NoBrush);
+        painter->drawRect(boundingRect().adjusted(4,4,-4,-4));
     }
 }
 
 QString CellItem::getTileId() const
 {
-    return m_cell.tileId;
+    return m_cell ? m_cell->tileId : "";
 }
 
 void CellItem::setSelected(bool selected)
@@ -93,6 +133,8 @@ void CellItem::setSelected(bool selected)
 
 void CellItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-    emit cellClicked(m_cell.tileId);
+    if (m_cell)
+        emit cellClicked(m_cell->tileId);
+
     QGraphicsObject::mousePressEvent(event);
 }

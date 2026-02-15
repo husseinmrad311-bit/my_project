@@ -17,7 +17,7 @@ int CombatSystem::getAgentHP(AgentType type)
     case AgentType::Scout:     return 5;
     case AgentType::Sniper:    return 4;
     case AgentType::Seargeant: return 3;
-    default:                  return 0;
+    default:                   return 0;
     }
 }
 
@@ -30,22 +30,8 @@ int CombatSystem::getDiceCount(AgentType type)
     case AgentType::Scout:     return 1;
     case AgentType::Sniper:    return 3;
     case AgentType::Seargeant: return 1;
-    default:                  return 0;
+    default:                   return 0;
     }
-}
-
-// --------------------------------------------------
-// TEMP: pick any placed defender unit
-// --------------------------------------------------
-Unit* CombatSystem::findTargetUnit(Player* defender)
-{
-    if (!defender) return nullptr;
-
-    for (const auto& piece : defender->getPieces()) {
-        if (piece && piece->getPosition())
-            return piece.get();
-    }
-    return nullptr;
 }
 
 // --------------------------------------------------
@@ -104,28 +90,40 @@ int CombatSystem::sumGroundShields(const std::vector<Cell*>& path)
 }
 
 // --------------------------------------------------
-// FULL ATTACK RESOLUTION (PDF)
+// FULL ATTACK (PDF CORRECT)
 // --------------------------------------------------
 bool CombatSystem::performAttack(
     AgentType agentType,
     Player* attacker,
-    Player* defender
-    ) {
-    if (!attacker || !defender)
+    Player* defender,
+    Cell* targetCell
+    )
+{
+
+    if (!attacker || !defender || !targetCell)
         return false;
 
     Unit* attackerUnit = attacker->getAgentPiece(agentType);
-    Unit* targetUnit   = findTargetUnit(defender);
-
-    if (!attackerUnit || !attackerUnit->getPosition() || !targetUnit) {
-        std::cout << "Attacker or target unit missing/unplaced\n";
+    if (!attackerUnit || !attackerUnit->getPosition())
         return false;
-    }
 
-    // Shortest path
+    // Must contain a target
+    if (targetCell->agent == AgentType::None)
+        return false;
+
+    // Safety: prevent self-attack
+    Side attackerSide =
+        (attacker->getId() == 1 ? Side::A : Side::B);
+
+    if (targetCell->agentSide == attackerSide)
+        return false;
+
+    AgentType targetType = targetCell->agent;
+
+    // Compute shortest path
     auto path = shortestPath(
         attackerUnit->getPosition(),
-        targetUnit->getPosition()
+        targetCell
         );
 
     if (path.empty()) {
@@ -138,43 +136,38 @@ bool CombatSystem::performAttack(
         std::cout << c->tileId.toStdString() << " ";
     std::cout << std::endl;
 
-    // Ground shields
     int shieldSum = sumGroundShields(path);
     std::cout << "Ground shield sum: " << shieldSum << std::endl;
 
-    // Target HP
-    int targetHP = getAgentHP(
-        targetUnit->getType() == Unit::Type::SCOUT
-            ? AgentType::Scout
-            : targetUnit->getType() == Unit::Type::SNIPER
-                  ? AgentType::Sniper
-                  : AgentType::Seargeant
-        );
-
+    int targetHP = getAgentHP(targetType);
     std::cout << "Target HP: " << targetHP << std::endl;
 
-    // Attack criterion (clamp to 10)
     int attackCriterion = shieldSum + targetHP;
     if (attackCriterion > 10)
         attackCriterion = 10;
 
     std::cout << "Attack criterion: " << attackCriterion << std::endl;
 
-    // Dice roll
     auto rolls = DiceSystem::rollD10(getDiceCount(agentType));
+
     std::cout << "Dice rolled: ";
-    for (int r : rolls) std::cout << r << " ";
+    for (int r : rolls)
+        std::cout << r << " ";
     std::cout << std::endl;
 
-    // Success if ANY die > criterion
-    for (int r : rolls) {
-        if (r > attackCriterion) {
-            defender->removeOneCardOfType(agentType);
-            std::cout << "Attack successful!" << std::endl;
+    for (int r : rolls)
+    {
+        if (r > attackCriterion)
+        {
+            std::cout << "DEBUG: Removing card of type: "
+                      << (targetType == AgentType::Scout ? "Scout" :
+                              targetType == AgentType::Sniper ? "Sniper" : "Sergeant")
+                      << " for defender\n";
+            defender->removeOneCardOfType(targetType);
             return true;
         }
     }
 
-    std::cout << "Attack failed." << std::endl;
+    std::cout << "Attack failed.\n";
     return false;
 }

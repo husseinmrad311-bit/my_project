@@ -209,10 +209,22 @@ bool Player::removeOneCardOfType(AgentType type)
 
 void Player::removeAgentPieceIfExists(AgentType type)
 {
-    for (auto it = pieces.begin(); it != pieces.end(); ++it) {
-        if ((type == AgentType::Scout     && (*it)->getType() == Unit::Type::SCOUT) ||
+    for (auto it = pieces.begin(); it != pieces.end(); ++it)
+    {
+        bool match =
+            (type == AgentType::Scout     && (*it)->getType() == Unit::Type::SCOUT) ||
             (type == AgentType::Sniper    && (*it)->getType() == Unit::Type::SNIPER) ||
-            (type == AgentType::Seargeant && (*it)->getType() == Unit::Type::SERGEANT)) {
+            (type == AgentType::Seargeant && (*it)->getType() == Unit::Type::SERGEANT);
+
+        if (match)
+        {
+            Unit* unit = it->get();
+
+            // 🔥 Clear board cell if unit still placed
+            if (unit->getPosition())
+            {
+                unit->getPosition()->clearAgent();
+            }
 
             std::cout << name << "'s "
                       << Card(type).getTypeName()

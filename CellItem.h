@@ -4,6 +4,8 @@
 #include <QGraphicsObject>
 #include <QString>
 #include <QColor>
+#include <QPainter>
+#include <QGraphicsSceneMouseEvent>
 #include "Cell.h"
 
 class CellItem : public QGraphicsObject
@@ -11,11 +13,12 @@ class CellItem : public QGraphicsObject
     Q_OBJECT
 
 public:
-    explicit CellItem(const Cell& cell,
+    explicit CellItem(Cell* cell,
                       int size = 60,
                       QGraphicsItem* parent = nullptr);
 
     QRectF boundingRect() const override;
+
     void paint(QPainter* painter,
                const QStyleOptionGraphicsItem* option,
                QWidget* widget = nullptr) override;
@@ -30,9 +33,9 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
 private:
-    Cell m_cell;      // FULL CELL COPY (safe)
-    int  m_size;
-    bool m_selected = false;
+    Cell* m_cell = nullptr;     // Pointer to real board cell
+    int   m_size = 60;
+    bool  m_selected = false;
 };
 
 #endif

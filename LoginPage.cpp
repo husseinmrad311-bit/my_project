@@ -154,13 +154,13 @@ void LoginPage::onSelectMapButtonClicked()
             [this, p1, p2](const QString& mapPath,
                            const QString& statePath)
             {
-                // 1️⃣ Create Game engine
+                // Create Game engine
                 Game* game = new Game(
                     p1.toStdString(),
                     p2.toStdString()
                     );
 
-                // 2️⃣ Load map INTO GAME
+                // Load map INTO GAME
                 if (!game->loadMap(mapPath.toStdString())) {
                     QMessageBox::warning(this,
                                          "Map Load Failed",
@@ -169,7 +169,7 @@ void LoginPage::onSelectMapButtonClicked()
                     return;
                 }
 
-                // 3️⃣ Load state file
+                // Load state file
                 if (!game->loadStateFile(statePath.toStdString())) {
                     QMessageBox::warning(this,
                                          "State Load Failed",
@@ -178,14 +178,14 @@ void LoginPage::onSelectMapButtonClicked()
                     return;
                 }
 
-                // 4️⃣ Start game
+                // Start game
                 game->startGame();
 
-                // 5️⃣ Create Game Board UI
+                // Create Game Board UI
                 GameBoardWindow* board = new GameBoardWindow();
                 board->setAttribute(Qt::WA_DeleteOnClose, true);
 
-                // 6️⃣ Inject Game into UI
+                // Inject Game into UI
                 board->setGame(game);
 
                 board->show();

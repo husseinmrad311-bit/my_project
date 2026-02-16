@@ -3,7 +3,7 @@
 
 void Board::buildNeighbors()
 {
-    // Clear all neighbors first
+    // clear all neighbors first
     for (int r = 0; r < rows; ++r) {
         for (int c = 0; c < cols; ++c) {
             grid[r][c].neighbors.clear();
@@ -110,7 +110,7 @@ void Board::ensureBidirectional()
             Cell& cell = grid[r][c];
             if (cell.type < 0) continue;
 
-            // For each neighbor, ensure the reverse connection exists
+            // for each neighbor, ensure the reverse connection exists
             std::vector<Cell*> newNeighbors;
             for (Cell* neighbor : cell.neighbors) {
                 bool reverseExists = false;
@@ -158,7 +158,7 @@ void Board::rebuildNeighborPointers()
     // This is called after a move operation to ensure all neighbor
     // pointers point to cells within this board instance
 
-    // Simply rebuild all neighbors from scratch
+    // simply rebuild all neighbors from scratch
     buildNeighbors();
 }
 

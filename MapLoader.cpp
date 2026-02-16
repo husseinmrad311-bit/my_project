@@ -1,5 +1,5 @@
 // MapLoader.cpp
-// Parses map layout + optional state file
+// Parses map layout + state file
 
 #include "MapLoader.h"
 
@@ -155,7 +155,7 @@ bool MapLoader::loadFromFile(const QString& filePath,
     return true;
 }
 
-// NEW FUNCTION: Load state file separately
+//Load state file separately
 bool MapLoader::loadStateFile(const QString& stateFilePath, Board& board, QString& errorMessage)
 {
     errorMessage.clear();
@@ -241,7 +241,7 @@ bool MapLoader::loadStateFile(const QString& stateFilePath, Board& board, QStrin
                         AgentType agent = parseAgentType(typeStr);
                         if (agent != AgentType::None)
                         {
-                            // IMPORTANT: Only place if cell is empty
+                            // Only place if cell is empty
                             if (cell.agent == AgentType::None) {
                                 cell.agent = agent;
                                 cell.agentSide = parsedSide;

@@ -138,8 +138,8 @@ void GameBoardWindow::buildUI()
     player2StatsLabel = new QLabel("Player 2: Loading...");
     controlledTilesLabel = new QLabel("Controlled Tiles: Loading...");
 
-    player1StatsLabel->setStyleSheet("color: #ff6b6b; font-size: 12px; padding: 2px;");
-    player2StatsLabel->setStyleSheet("color: #4d9eff; font-size: 12px; padding: 2px;");
+    player1StatsLabel->setStyleSheet("color: #4d9eff; font-size: 12px; padding: 2px;");
+    player2StatsLabel->setStyleSheet("color: #ff6b6b; font-size: 12px; padding: 2px;");
     controlledTilesLabel->setStyleSheet("color: #ffd43b; font-size: 12px; padding: 2px; border-top: 1px solid #444; margin-top: 5px; padding-top: 5px;");
 
     statsLayout->addWidget(player1StatsLabel);
@@ -481,12 +481,11 @@ void GameBoardWindow::renderBoardFromGame()
     if (!m_game)
         return;
 
-    m_selectedItem = nullptr;   // 🔥 CRASH FIX
+    m_selectedItem = nullptr;
     m_selectedTile.clear();
 
     m_scene->clear();
 
-    // 🔥 FIX: removed const
     Board& board = m_game->board;
 
     const int rows = board.rows;
@@ -622,7 +621,7 @@ void GameBoardWindow::checkForGameOver()
     }
 }
 
-// Simple beep for actions
+// beep for actions
 void GameBoardWindow::playSound(bool success)
 {
     if (success) {

@@ -90,14 +90,12 @@ void MapSelectionWindow::loadMaps()
     }
 
     // -----------------------------
-    // Load STATE files (beside maps)
+    // Load STATE files
     // -----------------------------
 
-    // Go up from .../maps → .../Debug
     QDir parentDir = mapsDir;
     parentDir.cdUp();
 
-    // Now look for .../Debug/states
     QDir statesDir(parentDir.filePath("states"));
 
     qDebug() << "States folder path:" << statesDir.absolutePath();

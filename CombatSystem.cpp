@@ -9,7 +9,7 @@
 #include <algorithm>
 
 // --------------------------------------------------
-// Agent HP (PDF)
+// Agent HP
 // --------------------------------------------------
 int CombatSystem::getAgentHP(AgentType type)
 {
@@ -22,7 +22,7 @@ int CombatSystem::getAgentHP(AgentType type)
 }
 
 // --------------------------------------------------
-// Dice count (PDF)
+// Dice count
 // --------------------------------------------------
 int CombatSystem::getDiceCount(AgentType type)
 {
@@ -90,7 +90,7 @@ int CombatSystem::sumGroundShields(const std::vector<Cell*>& path)
 }
 
 // --------------------------------------------------
-// FULL ATTACK (PDF CORRECT)
+// FULL ATTACK
 // --------------------------------------------------
 bool CombatSystem::performAttack(
     AgentType agentType,

@@ -25,7 +25,7 @@ void CellItem::paint(QPainter* painter,
     painter->setRenderHint(QPainter::Antialiasing, true);
 
     // --------------------------------------------------
-    // 1️⃣ Base Terrain Color
+    // Base Terrain Color
     // --------------------------------------------------
     QColor color;
 
@@ -38,7 +38,7 @@ void CellItem::paint(QPainter* painter,
     }
 
     // --------------------------------------------------
-    // 2️⃣ Controlled Tile Overlay
+    // Controlled Tile Overlay
     // --------------------------------------------------
     if (m_cell->controlledBy == Side::A)
         color = QColor(120,170,255); // Blue tint
@@ -48,7 +48,7 @@ void CellItem::paint(QPainter* painter,
     painter->setBrush(color);
 
     // --------------------------------------------------
-    // 3️⃣ Border
+    // Border
     // --------------------------------------------------
     QPen borderPen = m_selected
                          ? QPen(Qt::yellow, 3)
@@ -58,7 +58,7 @@ void CellItem::paint(QPainter* painter,
     painter->drawRect(boundingRect());
 
     // --------------------------------------------------
-    // 4️⃣ Tile ID
+    // Tile ID
     // --------------------------------------------------
     painter->setPen(Qt::black);
     painter->drawText(boundingRect(),
@@ -66,7 +66,7 @@ void CellItem::paint(QPainter* painter,
                       m_cell->tileId);
 
     // --------------------------------------------------
-    // 5️⃣ Agent Rendering
+    // Agent Rendering
     // --------------------------------------------------
     if (m_cell->agent != AgentType::None)
     {
@@ -101,7 +101,7 @@ void CellItem::paint(QPainter* painter,
     }
 
     // --------------------------------------------------
-    // 6️⃣ Mark Indicator (Dashed Border)
+    // Mark Indicator (Dashed Border)
     // --------------------------------------------------
     if (m_cell->marked)
     {

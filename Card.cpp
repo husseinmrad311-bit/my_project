@@ -9,7 +9,7 @@ std::string Card::getTypeName() const {
     switch (type) {
     case AgentType::Scout: return "Scout";
     case AgentType::Sniper: return "Sniper";
-    case AgentType::Seargeant: return "Sergeant";  // Note: Your Cell.h has "Seargeant" not "Sergeant"
+    case AgentType::Seargeant: return "Sergeant";
     default: return "Unknown";
     }
 }

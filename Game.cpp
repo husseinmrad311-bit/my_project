@@ -109,7 +109,7 @@ Game::Game(const std::string& name1,const std::string& name2)
         else if (actionType == "release")
             success = releaseTile(target);
 
-        // 🔑 TURN END LOGIC (PDF-CORRECT)
+        // TURN END LOGIC
         bool endTurn = false;
 
         if (actionType == "attack")
@@ -361,7 +361,7 @@ Game::Game(const std::string& name1,const std::string& name2)
         if (cell->controlledBy != Side::None)
             return false;
 
-        // 🔥 MUST NOT contain enemy piece
+        // MUST NOT contain enemy piece
         if (cell->isOccupiedBy(opponentSide))
             return false;
 
@@ -390,7 +390,7 @@ Game::Game(const std::string& name1,const std::string& name2)
         if (cell->controlledBy != opponentSide)
             return false;
 
-        // 🔥 Must not contain enemy piece
+        //  Must not contain enemy piece
         if (cell->isOccupiedBy(opponentSide))
             return false;
 
@@ -469,8 +469,8 @@ Game::Game(const std::string& name1,const std::string& name2)
             return false;
 
         // IMPORTANT: Use move, not copy!
-        board = std::move(data.board);  // ✅ This uses move assignment
-        // board = data.board;           // ❌ This tries to use deleted copy assignment
+        board = std::move(data.board);  // This uses move assignment
+        // board = data.board;           //  This tries to use deleted copy assignment
 
         return true;
     }

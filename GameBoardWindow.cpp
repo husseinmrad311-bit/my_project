@@ -30,34 +30,124 @@ void GameBoardWindow::buildUI()
 
     // ===== Top Bar =====
     QHBoxLayout* topBar = new QHBoxLayout();
+
     turnLabel = new QLabel("CURRENT TURN:");
+    turnLabel->setStyleSheet(
+        "QLabel {"
+        "   color: white;"
+        "   font-weight: bold;"
+        "   font-size: 18px;"
+        "}"
+        );
+
     currentPlayerLabel = new QLabel("-");
+    // Color will be set dynamically in refreshHUD()
+
     currentCardLabel = new QLabel("Current Card: -");
+    currentCardLabel->setStyleSheet(
+        "QLabel {"
+        "   color: white;"
+        "   font-size: 16px;"
+        "   background-color: #8b5a2b;"
+        "   padding: 6px 15px;"
+        "   border-radius: 6px;"
+        "   font-weight: bold;"
+        "}"
+        );
 
     topBar->addWidget(turnLabel);
     topBar->addWidget(currentPlayerLabel);
     topBar->addStretch();
     topBar->addWidget(currentCardLabel);
 
-    // ===== Feedback Bar (Enhanced) =====
+    // ===== Feedback Bar (White background) =====
     QVBoxLayout* feedbackBar = new QVBoxLayout();
+
+    QWidget* feedbackWidget = new QWidget();
+    feedbackWidget->setStyleSheet(
+        "QWidget {"
+        "   background-color: white;"
+        "   border-radius: 5px;"
+        "   padding: 5px;"
+        "}"
+        );
+
+    QVBoxLayout* feedbackLayout = new QVBoxLayout(feedbackWidget);
+
     feedbackLabel = new QLabel("Ready.");
-    feedbackLabel->setStyleSheet("font-weight: bold; color: #4CAF50;");
+    feedbackLabel->setStyleSheet(
+        "QLabel {"
+        "   font-weight: bold;"
+        "   color: #4CAF50;"
+        "   font-size: 14px;"
+        "   background-color: transparent;"
+        "}"
+        );
 
     actionFeedbackLabel = new QLabel("");
-    actionFeedbackLabel->setStyleSheet("color: #FF9800; font-style: italic;");
+    actionFeedbackLabel->setStyleSheet(
+        "QLabel {"
+        "   color: #FF9800;"
+        "   font-style: italic;"
+        "   font-size: 13px;"
+        "   background-color: transparent;"
+        "}"
+        );
     actionFeedbackLabel->setWordWrap(true);
 
-    feedbackBar->addWidget(feedbackLabel);
-    feedbackBar->addWidget(actionFeedbackLabel);
+    feedbackLayout->addWidget(feedbackLabel);
+    feedbackLayout->addWidget(actionFeedbackLabel);
+
+    feedbackBar->addWidget(feedbackWidget);
 
     // ===== Action Bar =====
     QHBoxLayout* actionBar = new QHBoxLayout();
+
+    // Action buttons - Green
     moveButton = new QPushButton("Move");
     attackButton = new QPushButton("Attack");
     scoutButton = new QPushButton("Scout");
     controlButton = new QPushButton("Control");
+
+    QString actionButtonStyle =
+        "QPushButton {"
+        "   background-color: #2e7d32;"  // Dark green
+        "   color: white;"
+        "   font-weight: bold;"
+        "   font-size: 14px;"
+        "   padding: 8px 16px;"
+        "   border: none;"
+        "   border-radius: 4px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: #1b5e20;"  // Darker green on hover
+        "}"
+        "QPushButton:disabled {"
+        "   background-color: #555555;"
+        "   color: #aaaaaa;"
+        "}";
+
+    moveButton->setStyleSheet(actionButtonStyle);
+    attackButton->setStyleSheet(actionButtonStyle);
+    scoutButton->setStyleSheet(actionButtonStyle);
+    controlButton->setStyleSheet(actionButtonStyle);
+
+    // End Turn button - Red
     endTurnButton = new QPushButton("End Turn");
+    endTurnButton->setStyleSheet(
+        "QPushButton {"
+        "   background-color: #c62828;"
+        "   color: white;"
+        "   font-weight: bold;"
+        "   font-size: 14px;"
+        "   padding: 8px 16px;"
+        "   border: none;"
+        "   border-radius: 4px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: #8b0000;"
+        "}"
+        );
 
     actionBar->addWidget(moveButton);
     actionBar->addWidget(attackButton);
@@ -94,18 +184,18 @@ void GameBoardWindow::buildUI()
     legendLabel->setText(
         "<b style='color:#4CAF50; font-size:14px;'>LEGEND</b><br><br>"
         "<b style='color:white;'>Units:</b><br>"
-        "<span style='color:#ff6b6b;'>S</span> = Scout A<br>"
-        "<span style='color:#4d9eff;'>S</span> = Scout B<br>"
-        "<span style='color:#ff6b6b;'>N</span> = Sniper A<br>"
-        "<span style='color:#4d9eff;'>N</span> = Sniper B<br>"
-        "<span style='color:#ff6b6b;'>G</span> = Sergeant A<br>"
-        "<span style='color:#4d9eff;'>C</span> = Sergeant B<br><br>"
+        "<span style='color:#4d9eff;'>S</span> = Scout 1<br>"
+        "<span style='color:#ff6b6b;'>S</span> = Scout 2<br>"
+        "<span style='color:#4d9eff;'>N</span> = Sniper 1<br>"
+        "<span style='color:#ff6b6b;'>N</span> = Sniper 2<br>"
+        "<span style='color:#4d9eff;'>G</span> = Sergeant 1<br>"
+        "<span style='color:#ff6b6b;'>C</span> = Sergeant 2<br><br>"
         "<b style='color:white;'>Control:</b><br>"
-        "Thick <span style='color:#ff6b6b;'>Red Border</span> = Player A<br>"
-        "Thick <span style='color:#4d9eff;'>Blue Border</span> = Player B<br><br>"
+        "Thick <span style='color:#4d9eff;'>Blue Border</span> = Player 1<br>"
+        "Thick <span style='color:#ff6b6b;'>Red Border</span> = Player 2<br><br>"
         "<b style='color:white;'>Mark:</b><br>"
-        "<span style='color:#51cf66;'>Green Dashed</span> = Marked by A<br>"
-        "<span style='color:#22b8cf;'>Cyan Dashed</span> = Marked by B"
+        "<span style='color:#51cf66;'>Green Dashed</span> = Marked by 1<br>"
+        "<span style='color:#22b8cf;'>Cyan Dashed</span> = Marked by 2"
         );
 
     // Stats Panel
@@ -419,6 +509,39 @@ void GameBoardWindow::refreshHUD()
 
     Player* current = m_game->getCurrentPlayer();
     if (!current) return;
+
+    // Set player name with BIG text and color
+    QString playerName = QString::fromStdString(current->getName());
+    currentPlayerLabel->setText(playerName);
+
+    // Set color based on player ID
+    if (current->getId() == 1) {
+        currentPlayerLabel->setStyleSheet(
+            "QLabel {"
+            "   background-color: #1e3a5f;"  // Dark blue
+            "   color: white;"
+            "   font-weight: bold;"
+            "   font-size: 20px;"
+            "   padding: 8px 20px;"
+            "   border-radius: 8px;"
+            "   min-width: 120px;"
+            "   qproperty-alignment: AlignCenter;"
+            "}"
+            );
+    } else {
+        currentPlayerLabel->setStyleSheet(
+            "QLabel {"
+            "   background-color: #8b1a1a;"  // Dark red
+            "   color: white;"
+            "   font-weight: bold;"
+            "   font-size: 20px;"
+            "   padding: 8px 20px;"
+            "   border-radius: 8px;"
+            "   min-width: 120px;"
+            "   qproperty-alignment: AlignCenter;"
+            "}"
+            );
+    }
 
     currentPlayerLabel->setText(QString::fromStdString(current->getName()));
 

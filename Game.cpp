@@ -5,6 +5,7 @@
     #include <QFile>
     #include <QTextStream>
     #include <QStringList>
+using namespace std ;
 Game::Game(const std::string& name1,const std::string& name2)
 {
     players.push_back(std::make_unique<Player>(1));
@@ -153,24 +154,42 @@ Game::Game(const std::string& name1,const std::string& name2)
     // --------------------------------------------------
     bool Game::movePiece(AgentType agentType, const std::string& targetCoord)
     {
+        // ===== DEBUG START =====
+        std::cout << "\n🔍 ===== MOVE DEBUG =====" << std::endl;
+        std::cout << "Agent: " << (agentType == AgentType::Scout ? "Scout" :
+                                       agentType == AgentType::Sniper ? "Sniper" : "Sergeant") << std::endl;
+        std::cout << "Target coordinate: '" << targetCoord << "'" << std::endl;
+
         // ===== VALIDATION CHECKS =====
         Player* current = getCurrentPlayer();
         if (!current) {
-            std::cout << "ERROR: No current player\n";
+            std::cout << "❌ ERROR: No current player" << std::endl;
             return false;
         }
+        std::cout << "Current player: " << current->getName() << " (ID: " << current->getId() << ")" << std::endl;
 
         Unit* piece = current->getAgentPiece(agentType);
         if (!piece) {
-            std::cout << "ERROR: No piece found for agent type\n";
+            std::cout << "❌ ERROR: No piece found for agent type" << std::endl;
             return false;
         }
+        std::cout << "Piece: " << piece->getTypeName() << std::endl;
 
         Cell* from = piece->getPosition();
         if (!from) {
-            std::cout << "ERROR: Piece has no position (not placed on board)\n";
+            std::cout << "❌ ERROR: Piece has no position (not placed on board)" << std::endl;
             return false;
         }
+        std::cout << "From cell: " << from->tileId.toStdString() << std::endl;
+
+        // Show all neighbors of current cell
+        std::cout << "Neighbors of " << from->tileId.toStdString() << ": ";
+        for (Cell* neighbor : from->neighbors) {
+            if (neighbor) {
+                std::cout << neighbor->tileId.toStdString() << " ";
+            }
+        }
+        std::cout << std::endl;
 
         // Validate that 'from' cell belongs to this board
         bool fromValid = false;
@@ -178,89 +197,114 @@ Game::Game(const std::string& name1,const std::string& name2)
             for (int c = 0; c < board.cols && !fromValid; ++c) {
                 if (from == &board.grid[r][c]) {
                     fromValid = true;
+                    std::cout << "✓ From cell verified at board[" << r << "][" << c << "]" << std::endl;
                 }
             }
         }
         if (!fromValid) {
-            std::cout << "ERROR: From cell does not belong to current board!\n";
+            std::cout << "❌ ERROR: From cell does not belong to current board!" << std::endl;
             return false;
         }
 
         // ===== FIND TARGET CELL =====
-        Cell* to = nullptr;
-
         if (targetCoord.empty()) {
-            std::cout << "ERROR: Empty target coordinate\n";
+            std::cout << "❌ ERROR: Empty target coordinate" << std::endl;
             return false;
         }
 
-        // First, find target cell in board
-        Cell* targetCell = nullptr;
+        // Find target cell in board
+        Cell* to = nullptr;  // SINGLE pointer for target
         for (int r = 0; r < board.rows; ++r) {
             for (int c = 0; c < board.cols; ++c) {
                 if (board.grid[r][c].tileId.toStdString() == targetCoord) {
-                    targetCell = &board.grid[r][c];
+                    to = &board.grid[r][c];
+                    std::cout << "✓ Found target cell: " << targetCoord
+                              << " at board[" << r << "][" << c << "]" << std::endl;
                     break;
                 }
             }
+            if (to) break;
         }
 
-        if (!targetCell) {
-            std::cout << "ERROR: Target cell " << targetCoord << " not found in board\n";
+        if (!to) {
+            std::cout << "❌ ERROR: Target cell " << targetCoord << " not found in board" << std::endl;
             return false;
         }
 
-        // Now check if target is a neighbor of from
+        // Check if target is a neighbor of from
+        std::cout << "Checking if " << targetCoord << " is a neighbor of "
+                  << from->tileId.toStdString() << "..." << std::endl;
+
         bool isNeighbor = false;
         for (Cell* neighbor : from->neighbors) {
-            if (neighbor == targetCell) {
+            if (neighbor == to) {
                 isNeighbor = true;
-                to = targetCell;
+                std::cout << "✓ YES! " << targetCoord << " IS a neighbor!" << std::endl;
                 break;
             }
         }
 
         if (!isNeighbor) {
-            std::cout << "Move failed: target " << targetCoord
-                      << " is not adjacent to " << from->tileId.toStdString() << "\n";
+            std::cout << "❌ NO: " << targetCoord << " is NOT a neighbor of "
+                      << from->tileId.toStdString() << std::endl;
+            std::cout << "Move failed: target not adjacent" << std::endl;
             return false;
         }
 
         // ===== VALIDATE TARGET CELL =====
+        std::cout << "Target cell state:" << std::endl;
+        std::cout << "  - Occupied: " << (to->isOccupied() ? "YES" : "NO") << std::endl;
+        if (to->isOccupied()) {
+            std::cout << "    Occupied by: " << (to->agentSide == Side::A ? "A" : "B") << " "
+                      << (to->agent == AgentType::Scout ? "Scout" :
+                              to->agent == AgentType::Sniper ? "Sniper" : "Sergeant") << std::endl;
+        }
+
+        std::cout << "  - Marked: " << (to->marked ? "YES" : "NO") << std::endl;
+        if (to->marked) {
+            std::cout << "    Marked by: " << (to->markedBy == Side::A ? "A" :
+                                                   to->markedBy == Side::B ? "B" : "None") << std::endl;
+        }
 
         if (to->isOccupied()) {
-            std::cout << "Move failed: tile " << targetCoord << " is occupied\n";
+            std::cout << "❌ Move failed: tile " << targetCoord << " is occupied" << std::endl;
             return false;
         }
 
         if (agentType != AgentType::Scout) {
             if (!to->marked) {
-                std::cout << "Move failed: tile " << targetCoord
-                          << " is not marked (scouted)\n";
+                std::cout << "❌ Move failed: tile " << targetCoord
+                          << " is not marked (scouted)" << std::endl;
                 return false;
             }
 
             Side mySide = (current->getId() == 1 ? Side::A : Side::B);
             if (to->markedBy != mySide) {
-                std::cout << "Move failed: tile " << targetCoord
-                          << " is marked by opponent\n";
+                std::cout << "❌ Move failed: tile " << targetCoord
+                          << " is marked by opponent" << std::endl;
                 return false;
             }
+            std::cout << "✓ Marking check passed" << std::endl;
         }
 
         // ===== PERFORM MOVEMENT SAFELY =====
         try {
+            std::cout << "Performing movement..." << std::endl;
+
             // 1. Clear origin cell
             from->clearAgent();
+            std::cout << "  - Cleared origin cell" << std::endl;
 
             // 2. Set destination cell
             Side mySide = (current->getId() == 1 ? Side::A : Side::B);
             to->setAgent(agentType, mySide);
+            std::cout << "  - Set destination cell" << std::endl;
 
             // 3. Update unit's position
             piece->setPosition(to);
+            std::cout << "  - Updated unit position" << std::endl;
 
-            std::cout << "Move successful: "
+            std::cout << "✅ Move successful: "
                       << piece->getTypeName() << " moved from "
                       << from->tileId.toStdString() << " to "
                       << to->tileId.toStdString() << "\n";
@@ -268,7 +312,7 @@ Game::Game(const std::string& name1,const std::string& name2)
             return true;
 
         } catch (const std::exception& e) {
-            std::cout << "EXCEPTION during move: " << e.what() << "\n";
+            std::cout << "❌ EXCEPTION during move: " << e.what() << "\n";
             return false;
         }
     }

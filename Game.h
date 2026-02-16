@@ -11,34 +11,34 @@ class Game {
 public:
     Game(const std::string& name1,const std::string& name2);
 
-    // Disable copy
+    //disable copy
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
 
-    // Enable move
+    // enable move
     Game(Game&&) = default;
     Game& operator=(Game&&) = default;
 
     bool loadMap(const std::string& path);
 
-    // Core state
+    // core state
     Board board;
     std::vector<std::unique_ptr<Player>> players;
 
-    // Turn system state
+    // turn system state
     int currentPlayerIndex = 0;
     bool gameStarted = false;
     bool gameOver = false;
     int turnCount = 0;
     Card* currentCard = nullptr;
 
-    // Lifecycle
+    // lifecycle
     void startGame();
     void nextTurn();
     void endTurn();
     bool isGameOver() const;
 
-    // Card actions
+    // card actions
     bool drawCard();
     bool performAction(const std::string& actionType,const std::string& target = "");
     bool returnCardToBottom();
@@ -59,14 +59,13 @@ public:
     void displayGameState() const;
     void displayTurnInfo() const;
 
-    // NEW: Load state file
+    //Load state file
     bool loadStateFile(const std::string& path);
 
 private:
     void initializePlayers();
     void initializeBoard();
 
-    // IMPORTANT: This function MUST be declared here!
     void synchronizeUnitsWithBoard();
 
     bool isActionAllowed(AgentType agentType,

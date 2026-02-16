@@ -1,4 +1,4 @@
-#ifndef CELL_H
+#ifndef CELL_H//pure data container .
 #define CELL_H
 
 #include <QString>
@@ -6,9 +6,6 @@
 #include <string>
 #include <iostream>
 
-// ================================
-// Phase 2 enums (DATA ONLY)
-// ================================
 
 enum class Side {
     None,
@@ -19,30 +16,24 @@ enum class Side {
 // Agent types - using YOUR exact naming from first chat
 enum class AgentType {
     None,
-    Scout,      // ✓ Your preferred name
-    Sniper,     // ✓ Your preferred name
-    Seargeant   // Note: Keeping your spelling "Seargeant"
+    Scout,
+    Sniper,
+    Seargeant
 };
 
-// ================================
-// Cell (pure data container)
-// ================================
+
 
 class Cell {
 public:
-    // ----- Phase 1 (unchanged) -----
     QString tileId;   // e.g. "A01"
     int type = 0;     // terrain type (0,1,2,...)
     std::vector<Cell*> neighbors;
 
-    // ----- Phase 2 (Day 2 parsing state) -----
     bool marked = false;
     Side markedBy = Side::None;
     Side controlledBy = Side::None;
     AgentType agent = AgentType::None;
     Side agentSide = Side::None;
-
-    // ----- New methods for Phase 2 Core Game -----
 
     // Get coordinate string (QString to std::string conversion)
     std::string getCoordinate() const {

@@ -33,7 +33,7 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
 private:
-    Cell* m_cell = nullptr;     // Pointer to real board cell
+    Cell* m_cell = nullptr;     //pointer to real board cell
     int   m_size = 60;
     bool  m_selected = false;
 };

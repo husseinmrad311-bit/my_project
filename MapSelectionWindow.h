@@ -24,7 +24,7 @@ public:
     ~MapSelectionWindow();
 
     void setMapsFolder(const QString &folderPath);
-    void setStatesFolder(const QString &folderPath);   // NEW
+    void setStatesFolder(const QString &folderPath);   //phase 2 additions
 
 signals:
     // UPDATED SIGNAL (map + state)
@@ -44,16 +44,16 @@ private:
     Ui::MapSelectionWindow *ui;
 
     QString m_mapsFolder;
-    QString m_stateFolder;          // NEW
+    QString m_stateFolder;          //phase 2 additions
 
     QVector<MapItem> m_maps;
-    QVector<MapItem> m_states;      // NEW
+    QVector<MapItem> m_states;      //phase 2 additions
 
     QPixmap m_bgPixmap;
 
     void updateBackground();
     void loadMaps();
-    void loadStates();              // NEW
+    void loadStates();              //phase 2 additions
 };
 
 #endif

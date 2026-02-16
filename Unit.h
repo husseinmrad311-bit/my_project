@@ -10,21 +10,21 @@ public:
     enum class Type {
         SCOUT,      // Scout
         SNIPER,     // Sniper
-        SERGEANT    // Note: Your Cell.h has "Seargeant" but Unit uses "SERGEANT"
+        SERGEANT    // seargeant
     };
 
     Unit(int id, int playerId, Type type);
 
-    // Simple getters
+    // simple getters
     int getId() const;
     int getPlayerId() const;
     Type getType() const;
     Cell* getPosition() const;
 
-    // Set position
+    // set position
     void setPosition(Cell* cell);
 
-    // Display
+    // display
     std::string getTypeName() const;
     void display() const;
 

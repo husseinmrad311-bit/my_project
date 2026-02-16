@@ -2,19 +2,19 @@
 #define CARD_H
 
 #include <string>
-#include "Cell.h"  // Use AgentType from Cell.h
+#include "Cell.h"
 
 class Card {
 public:
     Card(AgentType type);
 
-    // Simple getter
+    //getter
     AgentType getType() const;
 
-    // Get display name
+    //get display name
     std::string getTypeName() const;
 
-    // Display
+    //display
     void display() const;
 
 private:

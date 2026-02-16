@@ -31,37 +31,36 @@ private:
     void renderBoardFromGame();
     void fitBoardToView();
     void handleAction(const std::string& action);
-    void updateStatsPanel(); // NEW: Update player stats
+    void updateStatsPanel(); // Update player stats
 
     void playSound(bool success) ;
     Game* m_game = nullptr;
     QGraphicsScene* m_scene = nullptr;
 
-    // ===== HUD =====
+    //HUD
     QLabel* turnLabel = nullptr;
     QLabel* currentPlayerLabel = nullptr;
     QLabel* currentCardLabel = nullptr;
     QLabel* feedbackLabel = nullptr;
     QLabel* deckInfoLabel = nullptr;
 
-    // ===== NEW: Stats Panel Labels =====
+    // ===== Stats Panel Labels =====
     QLabel* statsTitleLabel = nullptr;
     QLabel* player1StatsLabel = nullptr;
     QLabel* player2StatsLabel = nullptr;
     QLabel* controlledTilesLabel = nullptr;
-
-    // ===== NEW: Detailed Feedback =====
+    // ===== detailed Feedback =====
     QLabel* actionFeedbackLabel = nullptr;
     QString lastActionMessage;
 
-    // ===== Buttons =====
+    // buttons
     QPushButton* moveButton = nullptr;
     QPushButton* attackButton = nullptr;
     QPushButton* scoutButton = nullptr;
     QPushButton* controlButton = nullptr;
     QPushButton* endTurnButton = nullptr;
 
-    // ===== Board =====
+    //board
     QGraphicsView* boardView = nullptr;
     QString m_selectedTile;
     CellItem* m_selectedItem = nullptr;

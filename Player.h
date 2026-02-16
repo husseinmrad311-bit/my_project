@@ -11,20 +11,20 @@ class Player {
 public:
     Player() = default;
     explicit Player(int playerId);
-    Player(int playerId, const std::string& playerName);   // ✅ NEW CONSTRUCTOR
+    Player(int playerId, const std::string& playerName);   // constructor
 
-    // Core properties
+    // core properties
     int id = -1;
     std::string name;
 
-    // Pieces (Scout, Sniper, Sergeant)
+    // Pieces (Scout/Sniper/Sergeant)
     std::vector<std::unique_ptr<Unit>> pieces;
 
     // Cards (4 Scout, 3 Sniper, 3 Sergeant)
     std::vector<Card*> deck;
     std::vector<Card*> hand;
 
-    // Getters
+    //getters
     int getId() const;
     const std::string& getName() const;
     const std::vector<std::unique_ptr<Unit>>& getPieces() const;
@@ -32,28 +32,26 @@ public:
     // Initialization
     void initializeCards();
     void initializePieces();
-
-    // Card operations
+    //card operations
     void shuffleDeck();
     Card* drawCard();
     void returnCardToBottom(Card* card);
 
-    // Piece access
+    // piece access
     Unit* getPiece(AgentType type) const;
     Unit* getAgentPiece(AgentType agentType) const;
 
-    // Display
+    // display
     void displayStatus() const;
 
-    // Helpers
+    // helpers
     Card* drawTopCard();
     bool hasCards() const;
     int getDeckSize() const;
 
-    // Action validation
+    // action validation
     bool canPerformAction(AgentType agentType, const std::string& actionType) const;
 
-    // STEP 2
     bool removeOneCardOfType(AgentType type);
     int countCardsOfType(AgentType type) const;
 

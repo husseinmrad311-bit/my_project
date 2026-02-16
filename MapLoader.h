@@ -4,32 +4,30 @@
 #include "Board.h"
 #include <QString>
 
-// ================================
+
 // MapData (layout + state)
-// ================================
+
 
 struct MapData {
     QString mapName;
     QString description;
     Board board;
-    QString stateFilePath;  // Path to state file
+    QString stateFilePath;  //path to state file
 };
 
-// ================================
 // MapLoader
-// ================================
 
 class MapLoader {
 public:
-    // Parses a map layout text file and fills MapData.
+    // parses a map layout text file and fills MapData.
     static bool loadFromFile(const QString& filePath,
                              MapData& out,
                              QString& errorMessage);
 
-    // NEW: Load state file into an existing board
+    //phase 2 additions : Load state file into an existing board
     static bool loadStateFile(const QString& stateFilePath,
                               Board& board,
                               QString& errorMessage);
 };
 
-#endif // MAPLOADER_H
+#endif

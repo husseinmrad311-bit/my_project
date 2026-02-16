@@ -6,7 +6,7 @@
 #include <memory>
 
 // ================================
-// Board (now with proper copy/move semantics)
+// Board ( with proper copy/move semantics)
 // ================================
 
 class Board {
@@ -19,23 +19,23 @@ public:
     void debugNeighbors(const QString& tileId) ;
     Board() = default;
     void ensureBidirectional() ;
-    // Copy constructor - disabled to prevent pointer issues
+    // copy constructor - disabled to prevent pointer issues
     Board(const Board&) = delete;
 
-    // Copy assignment - disabled
+    // copy assignment - disabled
     Board& operator=(const Board&) = delete;
 
-    // Move constructor
+    // move constructor
     Board(Board&& other) noexcept
         : rows(other.rows)
         , cols(other.cols)
         , grid(std::move(other.grid))
     {
-        // After moving, rebuild all neighbor pointers
+        //after moving, rebuild all neighbor pointers
         rebuildNeighborPointers();
     }
 
-    // Move assignment
+    // MOVE assignment
     Board& operator=(Board&& other) noexcept {
         if (this != &other) {
             rows = other.rows;
@@ -48,10 +48,10 @@ public:
 
     void buildNeighbors();
 
-    // New method to rebuild neighbor pointers after move/copy
+    //new method to rebuild neighbor pointers after move/copy
     void rebuildNeighborPointers();
 
-    // Helper to validate board integrity
+    //helper to validate board integrity
     bool validate() const;
 };
 
